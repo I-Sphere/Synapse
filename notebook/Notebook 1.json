@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "SampleSpark",
+			"referenceName": "devpool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -29,16 +29,16 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/SampleSpark",
-				"name": "SampleSpark",
+				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
+				"name": "devpool",
 				"type": "Spark",
-				"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SampleSpark",
+				"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/devpool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "2.4",
-				"nodeCount": 3,
+				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
 				"automaticScaleJobs": false
@@ -49,15 +49,16 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"from azureml.opendatasets import GeneralJournalAccountEntry\n",
+					"#import GeneralJournalAccountEntry\n",
+					"#df = GeneralJournalAccountEntry.to_spark_dataframe()\n",
 					"\n",
-					"df = GeneralJournalAccountEntry.to_spark_dataframe()\n",
 					"\n",
+					"df = \n",
 					"print(df)\n",
 					"\n",
 					"# select * from GeneralJournalAccountEntry"
 				],
-				"execution_count": 5
+				"execution_count": 4
 			}
 		]
 	}
