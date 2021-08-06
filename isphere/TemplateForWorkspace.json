@@ -184,17 +184,18 @@
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {
-							"microsoft": {
-								"language": "sparksql"
-							}
-						},
+						"metadata": {},
 						"source": [
-							"%%sql\n",
-							"select * from GeneralJournalAccountEntry"
+							"from azureml.opendatasets import GeneralJournalAccountEntry\n",
+							"\n",
+							"df = GeneralJournalAccountEntry.to_spark_dataframe()\n",
+							"\n",
+							"print(df)\n",
+							"\n",
+							"# select * from GeneralJournalAccountEntry"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 5
 					}
 				]
 			},
