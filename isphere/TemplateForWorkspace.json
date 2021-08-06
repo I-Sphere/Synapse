@@ -148,12 +148,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Site')]",
+			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "Example/RefData"
+					"name": "Example/D365"
 				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
@@ -202,7 +202,127 @@
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
+						"metadata": {
+							"microsoft": {
+								"language": "sparksql"
+							}
+						},
+						"source": [
+							"%%sql\n",
+							"select top 10 *\n",
+							"from openrowset(\n",
+							"        bulk 'https://isphere.blob.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-06-16-42-41.json',\n",
+							"        format = 'csv',\n",
+							"        fieldterminator ='0x0b',\n",
+							"        fieldquote = '0x0b',\n",
+							"        rowterminator = '0x0b' --> You need to override rowterminator to read classic JSON\n",
+							"    ) with (doc nvarchar(max)) as rows"
+						],
+						"outputs": [],
+						"execution_count": 1
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL Scripts')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Example/Admin"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "python"
+					},
+					"language_info": {
+						"name": "python"
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Site')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Example/RefData"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "devpool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_spark",
+						"display_name": "Synapse Spark"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
+						"name": "devpool",
+						"type": "Spark",
+						"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/devpool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "code",
 						"source": [
 							"val dfSite = (spark.read.format(\"jdbc\")\n",
 							".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
@@ -212,10 +332,10 @@
 							".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
 							".load())\n",
 							"\n",
-							"dfSite.show(5)"
+							"//dfSite.show(5)"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -240,10 +360,10 @@
 							".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
 							".load())\n",
 							"\n",
-							"dfActivite.show(5)"
+							"//dfActivite.show(5)"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -271,12 +391,32 @@
 							"                dfActivite(\"Societe\")\n",
 							"        )\n",
 							"\n",
-							"df.show(20)\n",
+							"//df.show(20)\n",
 							"\n",
 							""
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"df.write.mode(\"overwrite\").parquet(\"https://isphere.blob.core.windows.net/synapse/test.parquet\")"
+						],
+						"outputs": [],
+						"execution_count": 9
 					}
 				]
 			},
