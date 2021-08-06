@@ -1,5 +1,5 @@
 {
-	"name": "Test_Net",
+	"name": "Dataset",
 	"properties": {
 		"folder": {
 			"name": "Test"
@@ -25,11 +25,11 @@
 		"metadata": {
 			"saveOutput": true,
 			"kernelspec": {
-				"name": "synapse_pyspark",
-				"display_name": "Synapse PySpark"
+				"name": "synapse_spark",
+				"display_name": "Synapse Spark"
 			},
 			"language_info": {
-				"name": "csharp"
+				"name": "scala"
 			},
 			"a365ComputeOptions": {
 				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
@@ -52,30 +52,19 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"Action HelloWorld = () => Console.WriteLine(\"Hello World !!!\");\n",
+					"val df = (spark.read.format(\"jdbc\")\n",
+					".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
+					".option(\"dbtable\", \"Site\")\n",
+					".option(\"user\", \"sql\")\n",
+					".option(\"password\", \"ISphere4Success\") \n",
+					".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
+					".load())\n",
 					"\n",
-					"HelloWorld();"
-				],
-				"execution_count": 8
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": true
-				},
-				"source": [
+					"\n",
+					"print(df)\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 3
 			}
 		]
 	}
