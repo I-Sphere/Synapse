@@ -25,30 +25,45 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/GeneralJournalAccountEntry')]",
+			"name": "[concat(parameters('workspaceName'), '/ds_CompteComptable')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "isphere-WorkspaceDefaultStorage",
+					"referenceName": "STG",
 					"type": "LinkedServiceReference"
 				},
-				"folder": {
-					"name": "D365"
-				},
 				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "BYOD/ADAXGeneralJournalAccountEntryStaging",
-						"fileSystem": "synapse"
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Code_Business",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Code_Parent",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Source",
+						"type": "varchar"
 					}
-				},
-				"schema": {}
+				],
+				"typeProperties": {
+					"schema": "RefData",
+					"table": "CompteComptable"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/isphere-WorkspaceDefaultStorage')]"
+				"[concat(variables('workspaceId'), '/linkedServices/STG')]"
 			]
 		},
 		{
@@ -133,14 +148,152 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
+			"name": "[concat(parameters('workspaceName'), '/Site')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "Example/RefData"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "SampleSpark",
+					"referenceName": "devpool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_spark",
+						"display_name": "Synapse Spark"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
+						"name": "devpool",
+						"type": "Spark",
+						"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/devpool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"val dfSite = (spark.read.format(\"jdbc\")\n",
+							".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
+							".option(\"dbtable\", \"RefData.Site\")\n",
+							".option(\"user\", \"sql\")\n",
+							".option(\"password\", \"ISphere4Success\") \n",
+							".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
+							".load())\n",
+							"\n",
+							"dfSite.show(5)"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val dfActivite = (spark.read.format(\"jdbc\")\n",
+							".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
+							".option(\"dbtable\", \"RefData.Activite\")\n",
+							".option(\"user\", \"sql\")\n",
+							".option(\"password\", \"ISphere4Success\") \n",
+							".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
+							".load())\n",
+							"\n",
+							"dfActivite.show(5)"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val df = dfSite.join(dfActivite, dfSite(\"Activite\") === dfActivite(\"Code\")).select(\n",
+							"                dfSite(\"id\").alias(\"Id Site\"),\n",
+							"                dfSite(\"Code\").alias(\"Code Site\"),\n",
+							"                dfSite(\"Name\").alias(\"Site\"),\n",
+							"                dfSite(\"CodeParent\").alias(\"Code Parent\"),\n",
+							"                dfSite(\"SiteType\").alias(\"Type Site\"),\n",
+							"                dfActivite(\"Code\").alias(\"Code Activite\"),\n",
+							"                dfActivite(\"Name\").alias(\"Activite\"),\n",
+							"                dfActivite(\"Societe\")\n",
+							"        )\n",
+							"\n",
+							"df.show(20)\n",
+							"\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 29
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Test_Net')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Test"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "devpool",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -162,40 +315,53 @@
 						"display_name": "Synapse PySpark"
 					},
 					"language_info": {
-						"name": "python"
+						"name": "csharp"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/SampleSpark",
-						"name": "SampleSpark",
+						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
+						"name": "devpool",
 						"type": "Spark",
-						"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SampleSpark",
+						"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/devpool",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "2.4",
-						"nodeCount": 3,
+						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
-							"from azureml.opendatasets import GeneralJournalAccountEntry\n",
+							"Action HelloWorld = () => Console.WriteLine(\"Hello World !!!\");\n",
 							"\n",
-							"df = GeneralJournalAccountEntry.to_spark_dataframe()\n",
-							"\n",
-							"print(df)\n",
-							"\n",
-							"# select * from GeneralJournalAccountEntry"
+							"HelloWorld();"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
 					}
 				]
 			},
