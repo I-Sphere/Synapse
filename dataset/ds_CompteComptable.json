@@ -1,0 +1,37 @@
+{
+	"name": "ds_CompteComptable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "STG",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Code_Business",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Code_Parent",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Source",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "RefData",
+			"table": "CompteComptable"
+		}
+	}
+}
