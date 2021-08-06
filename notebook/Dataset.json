@@ -52,19 +52,68 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"val df = (spark.read.format(\"jdbc\")\n",
+					"val dfSite = (spark.read.format(\"jdbc\")\n",
 					".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
-					".option(\"dbtable\", \"Site\")\n",
+					".option(\"dbtable\", \"RefData.Site\")\n",
 					".option(\"user\", \"sql\")\n",
 					".option(\"password\", \"ISphere4Success\") \n",
 					".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
 					".load())\n",
 					"\n",
-					"\n",
-					"print(df)\n",
-					""
+					"dfSite.show(5)"
 				],
-				"execution_count": 4
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val dfActivite = (spark.read.format(\"jdbc\")\n",
+					".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
+					".option(\"dbtable\", \"RefData.Activite\")\n",
+					".option(\"user\", \"sql\")\n",
+					".option(\"password\", \"ISphere4Success\") \n",
+					".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
+					".load())\n",
+					"\n",
+					"dfActivite.show(5)"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val df = dfSite.join(dfActivite, dfSite(\"Activite\") === dfActivite(\"Code\")).select(\n",
+					"                dfSite(\"SiteType\").alias(\"test\"),\n",
+					"                \"CodeParent\"\n",
+					"            )\n",
+					"\n",
+					"df.show(20)"
+				],
+				"execution_count": 35
 			}
 		]
 	}
