@@ -1,0 +1,19 @@
+{
+	"name": "GeneralJournalAccountEntry",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "isphere-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "BYOD/ADAXGeneralJournalAccountEntryStaging",
+				"fileSystem": "synapse"
+			}
+		},
+		"schema": {}
+	}
+}
