@@ -5,6 +5,9 @@
 			"referenceName": "isphere-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "D365"
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
