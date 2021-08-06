@@ -1,8 +1,8 @@
 {
-	"name": "Dataset",
+	"name": "Site",
 	"properties": {
 		"folder": {
-			"name": "Test"
+			"name": "Example/RefData"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -62,7 +62,7 @@
 					"\n",
 					"dfSite.show(5)"
 				],
-				"execution_count": 26
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -89,7 +89,7 @@
 					"\n",
 					"dfActivite.show(5)"
 				],
-				"execution_count": 27
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -107,13 +107,21 @@
 				},
 				"source": [
 					"val df = dfSite.join(dfActivite, dfSite(\"Activite\") === dfActivite(\"Code\")).select(\n",
-					"                dfSite(\"SiteType\").alias(\"test\"),\n",
-					"                \"CodeParent\"\n",
-					"            )\n",
+					"                dfSite(\"id\").alias(\"Id Site\"),\n",
+					"                dfSite(\"Code\").alias(\"Code Site\"),\n",
+					"                dfSite(\"Name\").alias(\"Site\"),\n",
+					"                dfSite(\"CodeParent\").alias(\"Code Parent\"),\n",
+					"                dfSite(\"SiteType\").alias(\"Type Site\"),\n",
+					"                dfActivite(\"Code\").alias(\"Code Activite\"),\n",
+					"                dfActivite(\"Name\").alias(\"Activite\"),\n",
+					"                dfActivite(\"Societe\")\n",
+					"        )\n",
 					"\n",
-					"df.show(20)"
+					"df.show(20)\n",
+					"\n",
+					""
 				],
-				"execution_count": 35
+				"execution_count": 29
 			}
 		]
 	}
