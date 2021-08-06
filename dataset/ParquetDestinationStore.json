@@ -1,0 +1,18 @@
+{
+	"name": "ParquetDestinationStore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "isphere-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
