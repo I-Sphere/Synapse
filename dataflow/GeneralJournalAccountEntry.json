@@ -1,0 +1,28 @@
+{
+	"name": "GeneralJournalAccountEntry",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "GeneralJournalAccountEntry",
+						"type": "DatasetReference"
+					},
+					"name": "GeneralJournalAccountEntryDs"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "isphere-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "GeneralJournalAccountEntrySql"
+				}
+			],
+			"transformations": [],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinferDriftedColumnTypes: true,\n\tlimit: 100,\n\tignoreNoFilesFound: false,\n\tdocumentForm: 'documentPerLine') ~> GeneralJournalAccountEntryDs\nGeneralJournalAccountEntryDs sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet',\n\tfileSystem: 'synapse',\n\tfolderPath: 'GeneralJournalAccountEntry',\n\tcompressionCodec: 'gzip',\n\tumask: 0022,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> GeneralJournalAccountEntrySql"
+		}
+	}
+}
