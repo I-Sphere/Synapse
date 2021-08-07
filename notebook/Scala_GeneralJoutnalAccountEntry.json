@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 1",
+	"name": "Scala_GeneralJoutnalAccountEntry",
 	"properties": {
 		"folder": {
 			"name": "Example/D365"
@@ -51,23 +51,33 @@
 		"cells": [
 			{
 				"cell_type": "code",
+				"source": [
+					"val files_path = \"https://isphere.blob.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging.json\"\n",
+					"\n",
+					"//val df = spark.read.json(files_path)\n",
+					"//df.show(10)"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
 				"metadata": {
-					"microsoft": {
-						"language": "sparksql"
-					}
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
 				},
 				"source": [
-					"%%sql\n",
-					"select top 10 *\n",
-					"from openrowset(\n",
-					"        bulk 'https://isphere.blob.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-06-16-42-41.json',\n",
-					"        format = 'csv',\n",
-					"        fieldterminator ='0x0b',\n",
-					"        fieldquote = '0x0b',\n",
-					"        rowterminator = '0x0b' --> You need to override rowterminator to read classic JSON\n",
-					"    ) with (doc nvarchar(max)) as rows"
+					"val df = spark.read.text(files_path)\n",
+					"df.show(10)"
 				],
-				"execution_count": 1
+				"execution_count": 10
 			}
 		]
 	}
