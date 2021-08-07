@@ -148,6 +148,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "select top 10 *\nfrom openrowset(\n        bulk 'https://isphere.blob.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-08-00-08-30.csv',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "Built-in",
+						"databaseName": "default"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/SQL Scripts')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -239,15 +259,12 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"val files_path = \"https://isphere.blob.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging.json\"\n",
 							"\n",
@@ -435,6 +452,75 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Sql_GeneralJournalAccountEntry')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Example/D365"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "devpool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_sparksql",
+						"display_name": "Synapse SQL"
+					},
+					"language_info": {
+						"name": "sql"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
+						"name": "devpool",
+						"type": "Spark",
+						"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/devpool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "2.4",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							"SELECT\n",
+							"    TOP 100 *\n",
+							"FROM\n",
+							"    OPENROWSET(\n",
+							"        BULK 'https://isphere.blob.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging.json',\n",
+							"        --FORMAT='PARQUET'\n",
+							"    ) AS [result]"
+						],
+						"outputs": [],
+						"execution_count": 1
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Test_Net')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -516,38 +602,6 @@
 						"execution_count": null
 					}
 				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/sqlpool')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"restorePointInTime": "0001-01-01T00:00:00",
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "francecentral"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Sql_GeneralJournalAccountEntry')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Example/D365"
-				},
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"metadata": {
-					"language_info": {
-						"name": "python"
-					}
-				},
-				"cells": []
 			},
 			"dependsOn": []
 		}
