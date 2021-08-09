@@ -62,7 +62,7 @@
 					"\n",
 					"//dfSite.show(5)"
 				],
-				"execution_count": 82
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -89,7 +89,7 @@
 					"\n",
 					"//dfActivite.show(5)"
 				],
-				"execution_count": 83
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -107,18 +107,17 @@
 				},
 				"source": [
 					"val df = dfSite.join(dfActivite, dfSite(\"Activite\") === dfActivite(\"Code\")).select(\n",
-					"                dfSite(\"id\").alias(\"Id Site\"),\n",
-					"                dfSite(\"Code\").alias(\"Code Site\"),\n",
-					"                dfSite(\"Name\").alias(\"Site\"),\n",
-					"                dfSite(\"CodeParent\").alias(\"Code Parent\"),\n",
-					"                dfSite(\"SiteType\").alias(\"Type Site\"),\n",
-					"                dfActivite(\"Code\").alias(\"Code Activite\"),\n",
-					"                dfActivite(\"Name\").alias(\"Activite\"),\n",
-					"                dfActivite(\"Societe\")\n",
-					"        )\n",
-					"df.show(1000)"
+					"                dfSite(\"id\").alias(\"id_site\"),\n",
+					"                dfSite(\"Code\").alias(\"code_site\"),\n",
+					"                dfSite(\"Name\").alias(\"site\"),\n",
+					"                dfSite(\"CodeParent\").alias(\"code_parent\"),\n",
+					"                dfSite(\"SiteType\").alias(\"type_site\"),\n",
+					"                dfActivite(\"Code\").alias(\"code_activite\"),\n",
+					"                dfActivite(\"Name\").alias(\"activite\"),\n",
+					"                dfActivite(\"societe\")\n",
+					"        )"
 				],
-				"execution_count": 86
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -136,10 +135,10 @@
 				},
 				"source": [
 					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
-					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/synapse/DWH/site_\" + v.toString() + \".parquet\"\n",
+					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/site/site_\" + currDateTime.toString() + \".parquet\"\n",
 					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
-				"execution_count": 85
+				"execution_count": 16
 			}
 		]
 	}
