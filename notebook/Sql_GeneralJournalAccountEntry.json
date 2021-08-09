@@ -7,7 +7,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "devpool",
+			"referenceName": "sparkpooldev1",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -32,16 +32,16 @@
 				"name": "sql"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
-				"name": "devpool",
+				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/ispheresynapse/bigDataPools/sparkpooldev1",
+				"name": "sparkpooldev1",
 				"type": "Spark",
-				"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/devpool",
+				"endpoint": "https://ispheresynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpooldev1",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
-				"nodeCount": 10,
+				"sparkVersion": "3.0",
+				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
 				"automaticScaleJobs": false
