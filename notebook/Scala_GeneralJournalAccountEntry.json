@@ -7,7 +7,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "devpool",
+			"referenceName": "sparkpooldev1",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -32,16 +32,16 @@
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/isphere/bigDataPools/devpool",
-				"name": "devpool",
+				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/ispheresynapse/bigDataPools/sparkpooldev1",
+				"name": "sparkpooldev1",
 				"type": "Spark",
-				"endpoint": "https://isphere.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/devpool",
+				"endpoint": "https://ispheresynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpooldev1",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "2.4",
-				"nodeCount": 10,
+				"sparkVersion": "3.0",
+				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
 				"automaticScaleJobs": false
@@ -52,12 +52,12 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"val files_path = \"https://isphere.blob.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging.json\"\n",
+					"val files_path = \"abfss://synapse@isphere.dfs.core.windows.net/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-08-00-08-30.csv\"\n",
 					"\n",
 					"//val df = spark.read.json(files_path)\n",
 					"//df.show(10)"
 				],
-				"execution_count": 9
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -77,7 +77,7 @@
 					"val df = spark.read.text(files_path)\n",
 					"df.show(10)"
 				],
-				"execution_count": 10
+				"execution_count": 2
 			}
 		]
 	}

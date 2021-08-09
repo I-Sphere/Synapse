@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 5",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n         JSON_VALUE (jsonContent, '$.TRANSACTIONCURRENCYCREDITAMOUNT') TRANSACTIONCURRENCYCREDITAMOUNT\n       , JSON_VALUE (jsonContent, '$.TRANSACTIONCURRENCYDEBITAMOUNT') TRANSACTIONCURRENCYDEBITAMOUNT\n       , JSON_VALUE (jsonContent, '$.ACCOUNTDISPLAYVALUE') ACCOUNTDISPLAYVALUE\nFROM\n    OPENROWSET(\n        BULK 'BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json',\n        data_source = 'ispheresynapse',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\norder by 3, 1 desc\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "ispheredb"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
