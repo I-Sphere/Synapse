@@ -1,9 +1,9 @@
 {
-	"name": "DW_RefData",
+	"name": "D365_GeneralJournalAccountEntry",
 	"properties": {
 		"activities": [
 			{
-				"name": "Site",
+				"name": "D365 GeneralJournalAccountEntry",
 				"type": "SynapseNotebook",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "Site",
+						"referenceName": "Scala_GeneralJournalAccountEntry",
 						"type": "NotebookReference"
 					},
 					"snapshot": true

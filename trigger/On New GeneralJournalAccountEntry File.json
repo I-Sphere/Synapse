@@ -9,6 +9,12 @@
 					"referenceName": "DW_RefData",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "D365_GeneralJournalAccountEntry",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "BlobEventsTrigger",
