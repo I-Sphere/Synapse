@@ -126,7 +126,7 @@
 				},
 				"source": [
 					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
-					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/site/site_\" + currDateTime.toString() + \".parquet\"\n",
+					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
 					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
 				"execution_count": 11

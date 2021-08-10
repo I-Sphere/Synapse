@@ -1,0 +1,20 @@
+{
+	"name": "dbo_GeneralJournalAccountEntry",
+	"properties": {
+		"folder": {
+			"name": "Exemple/External Table"
+		},
+		"content": {
+			"query": "DROP EXTERNAL TABLE dbo.GeneralJournalAccountEntry\nGO\nCREATE EXTERNAL TABLE dbo.GeneralJournalAccountEntry\n(\n\tcode_compte                     nvarchar(250),\n\tname_compte                     nvarchar(250),\n\tcode_business_compte            nvarchar(250),\n\tcode_business_compte_parent     nvarchar(250),\n\tsource                          nvarchar(250),\n    date_integration                DATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/GeneralJournalAccountEntry/'  \n)\nGO\n\nSELECT * FROM dbo.GeneralJournalAccountEntry\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
