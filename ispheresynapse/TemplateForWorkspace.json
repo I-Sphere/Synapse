@@ -375,8 +375,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "ExemplePool",
-						"databaseName": "ExemplePool"
+						"poolName": "SQLPerfPool",
+						"databaseName": "SQLPerfPool"
 					},
 					"resultLimit": 5000
 				},
@@ -398,8 +398,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "ExemplePool",
-						"databaseName": "ExemplePool"
+						"poolName": "SQLPerfPool",
+						"databaseName": "SQLPerfPool"
 					},
 					"resultLimit": 5000
 				},
@@ -421,8 +421,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "ExemplePool",
-						"databaseName": "ExemplePool"
+						"poolName": "SQLPerfPool",
+						"databaseName": "SQLPerfPool"
 					},
 					"resultLimit": 5000
 				},
@@ -444,8 +444,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "ExemplePool",
-						"databaseName": "ExemplePool"
+						"poolName": "SQLPerfPool",
+						"databaseName": "SQLPerfPool"
 					},
 					"resultLimit": 5000
 				},
@@ -467,8 +467,8 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "ExemplePool",
-						"databaseName": "ExemplePool"
+						"poolName": "SQLPerfPool",
+						"databaseName": "SQLPerfPool"
 					},
 					"resultLimit": 5000
 				},
