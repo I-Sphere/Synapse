@@ -5,13 +5,13 @@
 			"name": "Exemple/External Table"
 		},
 		"content": {
-			"query": "DROP EXTERNAL TABLE dbo.GeneralJournalAccountEntry\nGO\nCREATE EXTERNAL TABLE dbo.GeneralJournalAccountEntry\n(\n\tcode_compte                     nvarchar(250),\n\tname_compte                     nvarchar(250),\n\tcode_business_compte            nvarchar(250),\n\tcode_business_compte_parent     nvarchar(250),\n\tsource                          nvarchar(250),\n    date_integration                DATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/GeneralJournalAccountEntry/'  \n)\nGO\n\nSELECT * FROM dbo.GeneralJournalAccountEntry\nGO",
+			"query": "DROP EXTERNAL TABLE dbo.GeneralJournalAccountEntry\nGO\n\nCREATE EXTERNAL TABLE dbo.GeneralJournalAccountEntry\n(\n\tACCOUNTDISPLAYVALUE                     nvarchar(250),\n\tACCOUNTINGCURRENCYAMOUNT                float,\n\tACCOUNTINGDATE                     \t\tbigint,\n\tDESCRIPTION                     \t\tnvarchar(250),\n\tDOCUMENTDATE                     \t\tbigint,\n\tPOSTINGTYPE                     \t\tbigint,\n\tTRANSACTIONCURRENCYCREDITAMOUNT        \tfloat,\n\tTRANSACTIONCURRENCYDEBITAMOUNT         \tfloat,\n\tSITE                     \t\t\t\tint,\n\tdate_integration\t\t\t\t\t\tDATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/GeneralJournalAccountEntry'  \n)\nGO\n\nSELECT * FROM dbo.GeneralJournalAccountEntry\nGO",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"poolName": "Built-in",
-				"databaseName": "master"
+				"poolName": "ExemplePool",
+				"databaseName": "ExemplePool"
 			},
 			"resultLimit": 5000
 		},
