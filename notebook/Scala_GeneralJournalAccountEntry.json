@@ -54,11 +54,9 @@
 				"source": [
 					"val dfSource = spark.read.json(\"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\")\n",
 					"\n",
-					"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))\n",
-					"\n",
-					"//dfJournal.show(2)"
+					"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
-				"execution_count": 47
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -82,7 +80,7 @@
 					"\n",
 					"//dfSite.show(2)"
 				],
-				"execution_count": 48
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -113,9 +111,9 @@
 					"                dfSite(\"id_site\"),\n",
 					"                (current_timestamp()).as(\"date_integration\")\n",
 					"        )\n",
-					"df.columns()"
+					"df.show(2)"
 				],
-				"execution_count": 52
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -133,10 +131,10 @@
 				},
 				"source": [
 					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
-					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
+					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/site/site_\" + currDateTime.toString() + \".parquet\"\n",
 					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
-				"execution_count": 50
+				"execution_count": 11
 			}
 		]
 	}
