@@ -1,0 +1,20 @@
+{
+	"name": "dbo_vwCompte",
+	"properties": {
+		"folder": {
+			"name": "Exemple/View"
+		},
+		"content": {
+			"query": "CREATE VIEW [dbo].[vw_Compte]\nAS SELECT\n     c.[code_compte]\n    ,c.[name_compte]\n    ,c.[code_business_compte]\n    ,c.[code_business_compte_parent]\n FROM\n    [dbo].[Compte] c\n    inner join (select max([date_integration]) [date_integration] from [dbo].[Compte]) d\n        on d.[date_integration] = c.[date_integration];\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "ExemplePool",
+				"databaseName": "ExemplePool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
