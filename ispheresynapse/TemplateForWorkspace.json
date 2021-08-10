@@ -22,6 +22,10 @@
 		"ispheresynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://isphere.dfs.core.windows.net"
+		},
+		"On New GeneralJournalAccountEntry File_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
 		}
 	},
 	"variables": {
@@ -841,6 +845,77 @@
 			},
 			"dependsOn": [],
 			"location": "westeurope"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/On New GeneralJournalAccountEntry File')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "DW_RefData",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "D365_GeneralJournalAccountEntry",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('On New GeneralJournalAccountEntry File_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/DW_RefData')]",
+				"[concat(variables('workspaceId'), '/pipelines/D365_GeneralJournalAccountEntry')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/D365_GeneralJournalAccountEntry')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "D365 GeneralJournalAccountEntry",
+						"type": "SynapseNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "Scala_GeneralJournalAccountEntry",
+								"type": "NotebookReference"
+							},
+							"snapshot": true
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/Scala_GeneralJournalAccountEntry')]"
+			]
 		}
 	]
 }
