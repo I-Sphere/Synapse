@@ -415,7 +415,7 @@
 						"cell_type": "code",
 						"metadata": {},
 						"source": [
-							"val dfSite = (spark.read.format(\"jdbc\")\n",
+							"val df = (spark.read.format(\"jdbc\")\n",
 							".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
 							".option(\"dbtable\", \"D365_BI_STG.RefData.CompteComptable\")\n",
 							".option(\"user\", \"sql\")\n",
@@ -423,10 +423,10 @@
 							".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
 							".load())\n",
 							"\n",
-							"dfSite.show(5)"
+							"//dfSite.show(5)"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -448,7 +448,7 @@
 							"df.write.mode(\"overwrite\").parquet(file_path)"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 4
 					}
 				]
 			},
