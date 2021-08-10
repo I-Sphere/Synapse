@@ -76,9 +76,7 @@
 					"val dfSite = spark.read.sqlanalytics(\"ExemplePool.dbo.Site\").select(\n",
 					"    \"id_site\",\n",
 					"    \"code_site\"\n",
-					")\n",
-					"\n",
-					"//dfSite.show(2)"
+					")"
 				],
 				"execution_count": 9
 			},
@@ -106,12 +104,9 @@
 					"                dfJournal(\"POSTINGTYPE\").alias(\"POSTINGTYPE\"),\n",
 					"                dfJournal(\"TRANSACTIONCURRENCYCREDITAMOUNT\").alias(\"TRANSACTIONCURRENCYCREDITAMOUNT\"),\n",
 					"                dfJournal(\"TRANSACTIONCURRENCYDEBITAMOUNT\").alias(\"TRANSACTIONCURRENCYDEBITAMOUNT\"),\n",
-					"                dfJournal(\"SITE\").alias(\"SITE\"),\n",
-					"                dfSite(\"code_site\"),\n",
-					"                dfSite(\"id_site\"),\n",
+					"                dfSite(\"id_site\").alias(\"SITE\"),\n",
 					"                (current_timestamp()).as(\"date_integration\")\n",
-					"        )\n",
-					"df.show(2)"
+					"        )"
 				],
 				"execution_count": 10
 			},
