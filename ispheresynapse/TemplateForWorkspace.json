@@ -630,12 +630,15 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
-					}
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"val dfSource = spark.read.json(\"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\")\n",
 							"\n",
@@ -662,9 +665,7 @@
 							"val dfSite = spark.read.sqlanalytics(\"ExemplePool.dbo.Site\").select(\n",
 							"    \"id_site\",\n",
 							"    \"code_site\"\n",
-							")\n",
-							"\n",
-							"//dfSite.show(2)"
+							")"
 						],
 						"outputs": [],
 						"execution_count": 9
@@ -693,12 +694,9 @@
 							"                dfJournal(\"POSTINGTYPE\").alias(\"POSTINGTYPE\"),\n",
 							"                dfJournal(\"TRANSACTIONCURRENCYCREDITAMOUNT\").alias(\"TRANSACTIONCURRENCYCREDITAMOUNT\"),\n",
 							"                dfJournal(\"TRANSACTIONCURRENCYDEBITAMOUNT\").alias(\"TRANSACTIONCURRENCYDEBITAMOUNT\"),\n",
-							"                dfJournal(\"SITE\").alias(\"SITE\"),\n",
-							"                dfSite(\"code_site\"),\n",
-							"                dfSite(\"id_site\"),\n",
+							"                dfSite(\"id_site\").alias(\"SITE\"),\n",
 							"                (current_timestamp()).as(\"date_integration\")\n",
-							"        )\n",
-							"df.show(2)"
+							"        )"
 						],
 						"outputs": [],
 						"execution_count": 10
