@@ -57,12 +57,33 @@
 							},
 							"snapshot": true
 						}
+					},
+					{
+						"name": "Compte",
+						"type": "SynapseNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "Compte",
+								"type": "NotebookReference"
+							},
+							"snapshot": true
+						}
 					}
 				],
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/Site')]"
+				"[concat(variables('workspaceId'), '/notebooks/Site')]",
+				"[concat(variables('workspaceId'), '/notebooks/Compte')]"
 			]
 		},
 		{
@@ -338,14 +359,17 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
-					}
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
-							"val df = (spark.read.format(\"jdbc\")\n",
+							"val dfSource = (spark.read.format(\"jdbc\")\n",
 							".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
 							".option(\"dbtable\", \"D365_BI_STG.RefData.CompteComptable\")\n",
 							".option(\"user\", \"sql\")\n",
@@ -373,12 +397,32 @@
 							"collapsed": true
 						},
 						"source": [
+							"val df = dfSource.withColumn(\"date_integration\", current_timestamp())"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
 							"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
 							"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/compte/compte_\" + currDateTime.toString() + \".parquet\"\n",
 							"df.write.mode(\"overwrite\").parquet(file_path)"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 5
 					}
 				]
 			},
@@ -644,12 +688,15 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
-					}
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"val dfSite = (spark.read.format(\"jdbc\")\n",
 							".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
