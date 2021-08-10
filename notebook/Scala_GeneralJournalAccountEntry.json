@@ -52,10 +52,54 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"val df = spark.read.json(\"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\")\n",
-					"df.show(10)"
+					"val dfSource = spark.read.json(\"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\")\n",
+					"\n",
+					"dfSource.show(2)"
 				],
 				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val dfSite = spark.read.sqlanalytics(\"ExemplePool.dbo.Site\").select(\n",
+					"    \"id_site\",\n",
+					"    \"code_site\"\n",
+					")\n",
+					"\n",
+					"dfSite.show(2)"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val df = dfSource.join(dfSite, dfSource())"
+				],
+				"execution_count": null
 			}
 		]
 	}
