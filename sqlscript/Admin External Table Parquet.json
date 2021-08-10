@@ -1,0 +1,20 @@
+{
+	"name": "Admin External Table Parquet",
+	"properties": {
+		"folder": {
+			"name": "Exemple/Security"
+		},
+		"content": {
+			"query": "-- Create master key\nCREATE MASTER KEY;\nGO\n\n-- Create credential to access Data Lake\nCREATE DATABASE SCOPED CREDENTIAL ISphereDataLakeCredential\nWITH \n\tIDENTITY = 'isphere', \n\tSecret = 'clBmbxMDjtnc90HWGd3MJ0cuhq74zuaDviZw/2FSUGeQMrMR66ZueUDaJ88wtZCOn9Qf0oohT6+DZTU448uqvw==';\nGO\n\n-- Create external data source, pointing to Data Lake\nCREATE EXTERNAL DATA SOURCE ISphereDataLake\nwith (  \n      TYPE = HADOOP,\n      LOCATION ='abfss://synapse@isphere.dfs.core.windows.net',  \n      CREDENTIAL = ISphereDataLakeCredential  \n);  \nGO\n\n-- Create external file format\nCREATE EXTERNAL FILE FORMAT ParquetFileFormat  \nWITH (  \n    FORMAT_TYPE = PARQUET,  \n    DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'  \n);\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "ExemplePool",
+				"databaseName": "ExemplePool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

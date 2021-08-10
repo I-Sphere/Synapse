@@ -62,7 +62,7 @@
 					"\n",
 					"//dfSite.show(5)"
 				],
-				"execution_count": 7
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -89,7 +89,7 @@
 					"\n",
 					"//dfActivite.show(5)"
 				],
-				"execution_count": 8
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -114,10 +114,11 @@
 					"                dfSite(\"SiteType\").alias(\"type_site\"),\n",
 					"                dfActivite(\"Code\").alias(\"code_activite\"),\n",
 					"                dfActivite(\"Name\").alias(\"activite\"),\n",
-					"                dfActivite(\"societe\")\n",
+					"                dfActivite(\"societe\"),\n",
+					"                (current_timestamp()).as(\"date_integration\")\n",
 					"        )"
 				],
-				"execution_count": 13
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -138,7 +139,7 @@
 					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/site/site_\" + currDateTime.toString() + \".parquet\"\n",
 					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
-				"execution_count": 16
+				"execution_count": 7
 			}
 		]
 	}
