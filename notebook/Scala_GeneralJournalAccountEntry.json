@@ -54,9 +54,11 @@
 				"source": [
 					"val dfSource = spark.read.json(\"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\")\n",
 					"\n",
-					"dfSource.show(2)"
+					"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))\n",
+					"\n",
+					"//dfJournal.show(2)"
 				],
-				"execution_count": 4
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
@@ -78,9 +80,9 @@
 					"    \"code_site\"\n",
 					")\n",
 					"\n",
-					"dfSite.show(2)"
+					"//dfSite.show(2)"
 				],
-				"execution_count": 6
+				"execution_count": 48
 			},
 			{
 				"cell_type": "code",
@@ -97,9 +99,44 @@
 					"collapsed": true
 				},
 				"source": [
-					"val df = dfSource.join(dfSite, dfSource())"
+					"val df = dfJournal.join(dfSite, dfJournal(\"SITE\") === dfSite(\"code_site\")).select(\n",
+					"                dfJournal(\"ACCOUNTDISPLAYVALUE\").alias(\"ACCOUNTDISPLAYVALUE\"),\n",
+					"                dfJournal(\"ACCOUNTINGCURRENCYAMOUNT\").alias(\"ACCOUNTINGCURRENCYAMOUNT\"),\n",
+					"                dfJournal(\"ACCOUNTINGDATE\").alias(\"ACCOUNTINGDATE\"),\n",
+					"                dfJournal(\"DESCRIPTION\").alias(\"DESCRIPTION\"),\n",
+					"                dfJournal(\"DOCUMENTDATE\").alias(\"DOCUMENTDATE\"),\n",
+					"                dfJournal(\"POSTINGTYPE\").alias(\"POSTINGTYPE\"),\n",
+					"                dfJournal(\"TRANSACTIONCURRENCYCREDITAMOUNT\").alias(\"TRANSACTIONCURRENCYCREDITAMOUNT\"),\n",
+					"                dfJournal(\"TRANSACTIONCURRENCYDEBITAMOUNT\").alias(\"TRANSACTIONCURRENCYDEBITAMOUNT\"),\n",
+					"                dfJournal(\"SITE\").alias(\"SITE\"),\n",
+					"                dfSite(\"code_site\"),\n",
+					"                dfSite(\"id_site\"),\n",
+					"                (current_timestamp()).as(\"date_integration\")\n",
+					"        )\n",
+					"df.columns()"
 				],
-				"execution_count": null
+				"execution_count": 52
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
+					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
+					"df.write.mode(\"overwrite\").parquet(file_path)"
+				],
+				"execution_count": 50
 			}
 		]
 	}
