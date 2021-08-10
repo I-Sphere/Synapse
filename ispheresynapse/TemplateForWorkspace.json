@@ -274,6 +274,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/dbo_vw_Site')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Exemple/View"
+				},
+				"content": {
+					"query": "CREATE VIEW dbo.vw_Site AS\nSELECT\n     s.[id_site]\n    ,s.[code_site]\n    ,s.[site]\n    ,s.[code_parent]\n    ,s.[type_site]\n    ,s.[code_activite]\n    ,s.[activite]\n    ,s.[societe]\n FROM\n    [dbo].[Site] s\n    inner join (select max([date_integration]) [date_integration] from [dbo].[Site]) d\n        on d.[date_integration] = s.[date_integration]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "ExemplePool",
+						"databaseName": "ExemplePool"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Compte')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
