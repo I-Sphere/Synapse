@@ -856,13 +856,6 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "DW_RefData",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "D365_GeneralJournalAccountEntry",
 							"type": "PipelineReference"
 						},
@@ -880,7 +873,6 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/DW_RefData')]",
 				"[concat(variables('workspaceId'), '/pipelines/D365_GeneralJournalAccountEntry')]"
 			]
 		},
@@ -915,6 +907,38 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/notebooks/Scala_GeneralJournalAccountEntry')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/On Refresh RefData')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "DW_RefData",
+						"type": "PipelineReference"
+					},
+					"parameters": {}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Hour",
+					"interval": 24,
+					"startTime": "2021-08-10T06:00:00Z",
+					"endTime": "2021-08-12T19:05:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/DW_RefData')]"
 			]
 		}
 	]
