@@ -362,26 +362,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "WITH T AS (\n   SELECT\n       c.[code_compte]\n      ,c.[name_compte]\n      ,c.[code_business_compte]\n      ,c.[code_business_compte_parent]\n      ,c.[source]\n   FROM\n      [dbo].[Compte] c\n      inner join (select max([date_integration]) [date_integration] from [dbo].[Compte]) d\n         on d.[date_integration] = c.[date_integration]\n    GROUP BY\n       c.[code_compte]\n      ,c.[name_compte]\n      ,c.[code_business_compte]\n      ,c.[code_business_compte_parent]\n      ,c.[source]\n)\nSELECT\n       [code_compte]\n      ,[name_compte]\n      ,[code_business_compte]\n      ,[code_business_compte_parent]\nFROM\n   T\nWHERE\n   [source] = 'D365'\nUNION\nSELECT\n       T.[code_compte]\n      ,T.[name_compte]\n      ,T.[code_business_compte]\n      ,T.[code_business_compte_parent]\nFROM\n   T\n   left outer join T T1\n      on    T1.[source] = 'D365'\n      and   T1.[code_compte] = T.[code_compte]\nWHERE\n   T.[source] = 'Unicom'\n   and T1.[code_compte] is null",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "ExemplePool",
-						"databaseName": "ExemplePool"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/dbo_Compte')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -459,7 +439,7 @@
 					"name": "Exemple/View"
 				},
 				"content": {
-					"query": "DROP VIEW [dbo].[vw_Compte]\nGO\n\nCREATE VIEW [dbo].[vw_Compte] AS\nWITH T AS (\n   SELECT\n       c.[code_compte]\n      ,c.[name_compte]\n      ,c.[code_business_compte]\n      ,c.[code_business_compte_parent]\n      ,c.[source]\n   FROM\n      [dbo].[Compte] c\n      inner join (select max([date_integration]) [date_integration] from [dbo].[Compte]) d\n         on d.[date_integration] = c.[date_integration]\n    GROUP BY\n       c.[code_compte]\n      ,c.[name_compte]\n      ,c.[code_business_compte]\n      ,c.[code_business_compte_parent]\n      ,c.[source]\n)\nSELECT\n       [code_compte]\n      ,[name_compte]\n      ,[code_business_compte]\n      ,[code_business_compte_parent]\nFROM\n   T\nWHERE\n   [source] = 'D365'\nUNION\nSELECT\n       T.[code_compte]\n      ,T.[name_compte]\n      ,T.[code_business_compte]\n      ,T.[code_business_compte_parent]\nFROM\n   T\n   left outer join T T1\n      on    T1.[source] = 'D365'\n      and   T1.[code_compte] = T.[code_compte]\nWHERE\n   T.[source] = 'Unicom'\n   and T1.[code_compte] is null",
+					"query": "DROP VIEW [dbo].[vw_Compte]\nGO\n\nCREATE VIEW [dbo].[vw_Compte] AS\nWITH T AS (\n   SELECT\n       c.[code_compte]\n      ,c.[name_compte]\n      ,c.[code_business_compte]\n      ,c.[code_business_compte_parent]\n      ,c.[source]\n   FROM\n      [dbo].[Compte] c\n      inner join (select max([date_integration]) [date_integration] from [dbo].[Compte]) d\n         on d.[date_integration] = c.[date_integration]\n    GROUP BY\n       c.[code_compte]\n      ,c.[name_compte]\n      ,c.[code_business_compte]\n      ,c.[code_business_compte_parent]\n      ,c.[source]\n)\nSELECT\n       [code_compte]\n      ,[name_compte]\n      ,[code_business_compte]\n      ,[code_business_compte_parent]\n      ,[code_business_compte] + ' - ' + [name_compte] as [compte]\nFROM\n   T\nWHERE\n   [source] = 'D365'\n/*\nUNION\nSELECT\n       T.[code_compte]\n      ,T.[name_compte]\n      ,T.[code_business_compte]\n      ,T.[code_business_compte_parent]\nFROM\n   T\n   left outer join T T1\n      on    T1.[source] = 'D365'\n      and   T1.[code_compte] = T.[code_compte]\nWHERE\n   T.[source] = 'Unicom'\n   and T1.[code_compte] is null\n*/",
 					"metadata": {
 						"language": "sql"
 					},
@@ -621,68 +601,6 @@
 						],
 						"outputs": [],
 						"execution_count": null
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "sparkpooldev1",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"kernelspec": {
-						"name": "synapse_spark",
-						"display_name": "Synapse Spark"
-					},
-					"language_info": {
-						"name": "scala"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/ispheresynapse/bigDataPools/sparkpooldev1",
-						"name": "sparkpooldev1",
-						"type": "Spark",
-						"endpoint": "https://ispheresynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpooldev1",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.0",
-						"nodeCount": 3,
-						"cores": 4,
-						"memory": 28
-					}
-				},
-				"cells": [
-					{
-						"cell_type": "code",
-						"source": [
-							"val df = spark.read.parquet(\"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_20210810_205009.parquet/part-00000-0d3d691e-a2e2-4bbb-ab62-58a2778f2a5f-c000.snappy.parquet\")\r\n",
-							"\r\n",
-							"df.printSchema()"
-						],
-						"outputs": [],
-						"execution_count": 9
 					}
 				]
 			},
