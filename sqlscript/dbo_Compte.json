@@ -1,0 +1,20 @@
+{
+	"name": "dbo_Compte",
+	"properties": {
+		"folder": {
+			"name": "Exemple/External Table"
+		},
+		"content": {
+			"query": "DROP EXTERNAL TABLE dbo.Compte\nGO\nCREATE EXTERNAL TABLE dbo.Compte\n(\n\tcode_compte                     nvarchar(250),\n\tname_compte                     nvarchar(250),\n\tcode_business_compte            nvarchar(250),\n\tcode_business_compte_parent     nvarchar(250),\n\tsource                          nvarchar(250),\n    date_integration                DATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/compte/'  \n)\nGO\n\nSELECT * FROM dbo.Compte\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "ExemplePool",
+				"databaseName": "ExemplePool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
