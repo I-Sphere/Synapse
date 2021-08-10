@@ -29,6 +29,15 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/ExemplePool')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/DW_RefData')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -219,38 +228,21 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/ExternalDataSourceISphereSynapse')]",
+			"name": "[concat(parameters('workspaceName'), '/Admin External Table Parquet')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"content": {
-					"query": "CREATE EXTERNAL DATA SOURCE ispheresynapse WITH\n(\n\tLOCATION = 'https://isphere.blob.core.windows.net/synapse'\n)\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "ispheredb"
-					},
-					"resultLimit": 5000
+				"folder": {
+					"name": "Exemple/Security"
 				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/ExternalFileFormatJSON')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
 				"content": {
-					"query": "CREATE EXTERNAL FILE FORMAT ExternalFileFormatJSON WITH\n(\n\tFORMAT_TYPE = JSON\n)\n",
+					"query": "-- Create master key\nCREATE MASTER KEY;\nGO\n\n-- Create credential to access Data Lake\nCREATE DATABASE SCOPED CREDENTIAL ISphereDataLakeCredential\nWITH \n\tIDENTITY = 'isphere', \n\tSecret = 'clBmbxMDjtnc90HWGd3MJ0cuhq74zuaDviZw/2FSUGeQMrMR66ZueUDaJ88wtZCOn9Qf0oohT6+DZTU448uqvw==';\nGO\n\n-- Create external data source, pointing to Data Lake\nCREATE EXTERNAL DATA SOURCE ISphereDataLake\nwith (  \n      TYPE = HADOOP,\n      LOCATION ='abfss://synapse@isphere.dfs.core.windows.net',  \n      CREDENTIAL = ISphereDataLakeCredential  \n);  \nGO\n\n-- Create external file format\nCREATE EXTERNAL FILE FORMAT ParquetFileFormat  \nWITH (  \n    FORMAT_TYPE = PARQUET,  \n    DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'  \n);\nGO",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "ispheredb"
+						"poolName": "ExemplePool",
+						"databaseName": "ExemplePool"
 					},
 					"resultLimit": 5000
 				},
@@ -264,7 +256,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT TOP 100\n    jsonContent\n/* --> place the keys that you see in JSON documents in the WITH clause:\n       , JSON_VALUE (jsonContent, '$.key1') AS header1\n       , JSON_VALUE (jsonContent, '$.key2') AS header2\n*/\nFROM\n    OPENROWSET(\n        BULK 'https://isphere.dfs.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-09-08-30-32.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b',\n        ROWTERMINATOR = '0x0b'\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\n",
+					"query": "SELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://isphere.dfs.core.windows.net/synapse/DWH/site/site_20210809_212451.parquet/part-00189-e07ebf80-0c1f-4a5c-b6a3-55cf99ac5553-c000.snappy.parquet',\n        FORMAT='PARQUET'\n    ) AS [result]\n",
 					"metadata": {
 						"language": "sql"
 					},
@@ -279,78 +271,21 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
+			"name": "[concat(parameters('workspaceName'), '/dbo_Site')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT TOP 100\n    jsonContent\n/* --> place the keys that you see in JSON documents in the WITH clause:\n       , JSON_VALUE (jsonContent, '$.key1') AS header1\n       , JSON_VALUE (jsonContent, '$.key2') AS header2\n*/\nFROM\n    OPENROWSET(\n        BULK 'https://isphere.dfs.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-09-08-30-32.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b',\n        ROWTERMINATOR = '0x0b'\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
-					},
-					"resultLimit": 5000
+				"folder": {
+					"name": "Exemple/External Table"
 				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 3')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT TOP 100\n    jsonContent\n/* --> place the keys that you see in JSON documents in the WITH clause:\n       , JSON_VALUE (jsonContent, '$.key1') AS header1\n       , JSON_VALUE (jsonContent, '$.key2') AS header2\n*/\nFROM\n    OPENROWSET(\n        BULK 'https://isphere.dfs.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-09-09-26-01.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b',\n        ROWTERMINATOR = '0x0b'\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\n",
+					"query": "-- Create external table for Taxi Zones\nDROP EXTERNAL TABLE dbo.Site\nGO\nCREATE EXTERNAL TABLE dbo.Site\n(\n\tid_site             int,\n\tcode_site           nvarchar(250),\n\tsite                nvarchar(250),\n\tcode_parent         nvarchar(250),\n\ttype_site           nvarchar(250),\n\tcode_activite       nvarchar(250),\n\tactivite            nvarchar(250),\n    societe             nvarchar(250),\n    date_integration    DATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/site/'  \n)\nGO\n\nSELECT * FROM dbo.Site order by 1\nGO",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 4')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT TOP 100\n    jsonContent\n/* --> place the keys that you see in JSON documents in the WITH clause:\n       , JSON_VALUE (jsonContent, '$.key1') AS header1\n       , JSON_VALUE (jsonContent, '$.key2') AS header2\n*/\nFROM\n    OPENROWSET(\n        BULK 'https://isphere.dfs.core.windows.net/synapse/BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-09-09-47-27.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b',\n        ROWTERMINATOR = '\\n'\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "master"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 5')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n         JSON_VALUE (jsonContent, '$.TRANSACTIONCURRENCYCREDITAMOUNT') TRANSACTIONCURRENCYCREDITAMOUNT\n       , JSON_VALUE (jsonContent, '$.TRANSACTIONCURRENCYDEBITAMOUNT') TRANSACTIONCURRENCYDEBITAMOUNT\n       , JSON_VALUE (jsonContent, '$.ACCOUNTDISPLAYVALUE') ACCOUNTDISPLAYVALUE\nFROM\n    OPENROWSET(\n        BULK 'BYOD/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json',\n        data_source = 'ispheresynapse',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\norder by 3, 1 desc\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "Built-in",
-						"databaseName": "ispheredb"
+						"poolName": "ExemplePool",
+						"databaseName": "ExemplePool"
 					},
 					"resultLimit": 5000
 				},
@@ -446,77 +381,6 @@
 						],
 						"outputs": [],
 						"execution_count": 4
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Create DB')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Example/Admin"
-				},
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "sparkpooldev1",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
-					},
-					"language_info": {
-						"name": "python"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/ispheresynapse/bigDataPools/sparkpooldev1",
-						"name": "sparkpooldev1",
-						"type": "Spark",
-						"endpoint": "https://ispheresynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpooldev1",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.0",
-						"nodeCount": 3,
-						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
-				},
-				"cells": [
-					{
-						"cell_type": "code",
-						"metadata": {
-							"microsoft": {
-								"language": "sparksql"
-							}
-						},
-						"source": [
-							"%%sql\n",
-							"create database Example"
-						],
-						"outputs": [],
-						"execution_count": 1
 					}
 				]
 			},
@@ -715,7 +579,7 @@
 							"//dfSite.show(5)"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -743,7 +607,7 @@
 							"//dfActivite.show(5)"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -768,11 +632,12 @@
 							"                dfSite(\"SiteType\").alias(\"type_site\"),\n",
 							"                dfActivite(\"Code\").alias(\"code_activite\"),\n",
 							"                dfActivite(\"Name\").alias(\"activite\"),\n",
-							"                dfActivite(\"societe\")\n",
+							"                dfActivite(\"societe\"),\n",
+							"                (current_timestamp()).as(\"date_integration\")\n",
 							"        )"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -794,7 +659,7 @@
 							"df.write.mode(\"overwrite\").parquet(file_path)"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 7
 					}
 				]
 			},
@@ -953,6 +818,19 @@
 				]
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ExemplePool')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"restorePointInTime": "0001-01-01T00:00:00",
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "westeurope"
 		}
 	]
 }
