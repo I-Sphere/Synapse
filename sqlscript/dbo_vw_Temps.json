@@ -1,5 +1,5 @@
 {
-	"name": "dbo_vw_Site_Copy1",
+	"name": "dbo_vw_Temps",
 	"properties": {
 		"folder": {
 			"name": "Exemple/View"
