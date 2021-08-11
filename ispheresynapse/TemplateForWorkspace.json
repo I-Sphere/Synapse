@@ -431,6 +431,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/dbo_Temps')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Exemple/External Table"
+				},
+				"content": {
+					"query": "-- Create external table for Taxi Zones\nDROP EXTERNAL TABLE dbo.Temps\nGO\nCREATE EXTERNAL TABLE dbo.Temps\n(\n\tdt_Date             nvarchar(50),\n\tMois_Num            INT,\n\tMois                nvarchar(50),\n\tMois_Annee_Num      INT,\n\tMois_Annee          nvarchar(50),\n\tTrimestre           nvarchar(50),\n\tTrimestre_Annee     nvarchar(50),\n    Semestre            nvarchar(50),\n    Semestre_Annee      nvarchar(50),\n    Annee               nvarchar(4),\n    date_integration    DATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/temps/'  \n)\nGO\n\nSELECT * FROM dbo.temps order by 1\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "ExemplePool",
+						"databaseName": "ExemplePool"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/dbo_vwCompte')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -899,6 +922,132 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Temps')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Example/RefData"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "sparkpooldev1",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"kernelspec": {
+						"name": "synapse_spark",
+						"display_name": "Synapse Spark"
+					},
+					"language_info": {
+						"name": "scala"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/ispheresynapse/bigDataPools/sparkpooldev1",
+						"name": "sparkpooldev1",
+						"type": "Spark",
+						"endpoint": "https://ispheresynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpooldev1",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.0",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					}
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							"val dfTemps = (spark.read.format(\"jdbc\")\n",
+							".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
+							".option(\"dbtable\", \"RefData.Temps\")\n",
+							".option(\"user\", \"sql\")\n",
+							".option(\"password\", \"ISphere4Success\") \n",
+							".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
+							".load())\n",
+							"\n",
+							"//dfTemps.withColumn(\"test\", date_format(dfTemps(\"dt_Date\"), \"yyyy-MM-dd\")).show(5)"
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val df = dfTemps.select(\n",
+							"                date_format(dfTemps(\"dt_Date\"), \"yyyy-MM-dd\").alias(\"dt_Date\"),\n",
+							"                dfTemps(\"Mois_Num\"),\n",
+							"                dfTemps(\"Mois\"),\n",
+							"                dfTemps(\"Mois_Annee_Num\"),\n",
+							"                dfTemps(\"Mois_Annee\"),\n",
+							"                dfTemps(\"Trimestre\"),\n",
+							"                dfTemps(\"Trimestre_Annee\"),\n",
+							"                dfTemps(\"Semestre\"),\n",
+							"                dfTemps(\"Semestre_Annee\"),\n",
+							"                dfTemps(\"Annee\"),\n",
+							"                (current_timestamp()).as(\"date_integration\")\n",
+							"        )\n",
+							"dfTemps.printSchema()"
+						],
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
+							"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/temps/temps_\" + currDateTime.toString() + \".parquet\"\n",
+							"df.write.mode(\"overwrite\").parquet(file_path)"
+						],
+						"outputs": [],
+						"execution_count": 15
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Test_Net')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -995,6 +1144,29 @@
 			},
 			"dependsOn": [],
 			"location": "westeurope"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dbo_vw_Site_Copy1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Exemple/View"
+				},
+				"content": {
+					"query": "CREATE VIEW dbo.vw_Site AS\nSELECT\n     s.[id_site]\n    ,s.[code_site]\n    ,s.[site]\n    ,s.[code_parent]\n    ,s.[type_site]\n    ,s.[code_activite]\n    ,s.[activite]\n    ,s.[societe]\n FROM\n    [dbo].[Site] s\n    inner join (select max([date_integration]) [date_integration] from [dbo].[Site]) d\n        on d.[date_integration] = s.[date_integration]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "SQLPerfPool",
+						"databaseName": "SQLPerfPool"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
 		}
 	]
 }
