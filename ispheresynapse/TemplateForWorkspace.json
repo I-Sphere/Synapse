@@ -362,6 +362,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT\n     cast([dt_Date] as date)    as [dt_Date]\n    ,[Mois_Num]\n    ,[Mois]\n    ,[Mois_Annee_Num]\n    ,[Mois_Annee]\n    ,[Trimestre]\n    ,[Trimestre_Annee]\n    ,[Semestre]\n    ,[Semestre_Annee]\n    ,[Annee]\n FROM\n    [dbo].[Temps]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "ExemplePool",
+						"databaseName": "ExemplePool"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/dbo_Compte')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -492,6 +512,29 @@
 					"currentConnection": {
 						"poolName": "SQLPerfPool",
 						"databaseName": "SQLPerfPool"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dbo_vw_Temps')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Exemple/View"
+				},
+				"content": {
+					"query": "CREATE VIEW dbo.vw_Temps AS\nSELECT\n     cast([dt_Date] as date)    as [dt_Date]\n    ,[Mois_Num]\n    ,[Mois]\n    ,[Mois_Annee_Num]\n    ,[Mois_Annee]\n    ,[Trimestre]\n    ,[Trimestre_Annee]\n    ,[Semestre]\n    ,[Semestre_Annee]\n    ,[Annee]\n FROM\n    [dbo].[Temps]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "ExemplePool",
+						"databaseName": "ExemplePool"
 					},
 					"resultLimit": 5000
 				},
@@ -1144,29 +1187,6 @@
 			},
 			"dependsOn": [],
 			"location": "westeurope"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/dbo_vw_Site_Copy1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Exemple/View"
-				},
-				"content": {
-					"query": "CREATE VIEW dbo.vw_Site AS\nSELECT\n     s.[id_site]\n    ,s.[code_site]\n    ,s.[site]\n    ,s.[code_parent]\n    ,s.[type_site]\n    ,s.[code_activite]\n    ,s.[activite]\n    ,s.[societe]\n FROM\n    [dbo].[Site] s\n    inner join (select max([date_integration]) [date_integration] from [dbo].[Site]) d\n        on d.[date_integration] = s.[date_integration]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "SQLPerfPool",
-						"databaseName": "SQLPerfPool"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
 		}
 	]
 }
