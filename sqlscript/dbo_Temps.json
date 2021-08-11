@@ -1,0 +1,20 @@
+{
+	"name": "dbo_Temps",
+	"properties": {
+		"folder": {
+			"name": "Exemple/External Table"
+		},
+		"content": {
+			"query": "-- Create external table for Taxi Zones\nDROP EXTERNAL TABLE dbo.Temps\nGO\nCREATE EXTERNAL TABLE dbo.Temps\n(\n\tdt_Date             nvarchar(50),\n\tMois_Num            INT,\n\tMois                nvarchar(50),\n\tMois_Annee_Num      INT,\n\tMois_Annee          nvarchar(50),\n\tTrimestre           nvarchar(50),\n\tTrimestre_Annee     nvarchar(50),\n    Semestre            nvarchar(50),\n    Semestre_Annee      nvarchar(50),\n    Annee               nvarchar(4),\n    date_integration    DATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/temps/'  \n)\nGO\n\nSELECT * FROM dbo.temps order by 1\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "ExemplePool",
+				"databaseName": "ExemplePool"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

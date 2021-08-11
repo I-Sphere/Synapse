@@ -1,0 +1,122 @@
+{
+	"name": "Temps",
+	"properties": {
+		"folder": {
+			"name": "Example/RefData"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpooldev1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"kernelspec": {
+				"name": "synapse_spark",
+				"display_name": "Synapse Spark"
+			},
+			"language_info": {
+				"name": "scala"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/ispheresynapse/bigDataPools/sparkpooldev1",
+				"name": "sparkpooldev1",
+				"type": "Spark",
+				"endpoint": "https://ispheresynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpooldev1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.0",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"val dfTemps = (spark.read.format(\"jdbc\")\n",
+					".option(\"url\",  \"jdbc:sqlserver://devispheresql.database.windows.net:1433;databaseName=D365_BI_STG\")\n",
+					".option(\"dbtable\", \"RefData.Temps\")\n",
+					".option(\"user\", \"sql\")\n",
+					".option(\"password\", \"ISphere4Success\") \n",
+					".option(\"driver\", \"com.microsoft.sqlserver.jdbc.SQLServerDriver\") \n",
+					".load())\n",
+					"\n",
+					"//dfTemps.withColumn(\"test\", date_format(dfTemps(\"dt_Date\"), \"yyyy-MM-dd\")).show(5)"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val df = dfTemps.select(\n",
+					"                date_format(dfTemps(\"dt_Date\"), \"yyyy-MM-dd\").alias(\"dt_Date\"),\n",
+					"                dfTemps(\"Mois_Num\"),\n",
+					"                dfTemps(\"Mois\"),\n",
+					"                dfTemps(\"Mois_Annee_Num\"),\n",
+					"                dfTemps(\"Mois_Annee\"),\n",
+					"                dfTemps(\"Trimestre\"),\n",
+					"                dfTemps(\"Trimestre_Annee\"),\n",
+					"                dfTemps(\"Semestre\"),\n",
+					"                dfTemps(\"Semestre_Annee\"),\n",
+					"                dfTemps(\"Annee\"),\n",
+					"                (current_timestamp()).as(\"date_integration\")\n",
+					"        )\n",
+					"dfTemps.printSchema()"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
+					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/temps/temps_\" + currDateTime.toString() + \".parquet\"\n",
+					"df.write.mode(\"overwrite\").parquet(file_path)"
+				],
+				"execution_count": 15
+			}
+		]
+	}
+}
