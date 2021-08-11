@@ -1,0 +1,33 @@
+{
+	"name": "Pipeline Test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Scala_GeneralJournalAccountEntry_Copy1",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Scala_GeneralJournalAccountEntry_Copy1",
+						"type": "NotebookReference"
+					},
+					"snapshot": true
+				}
+			}
+		],
+		"parameters": {
+			"file_to_process": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
