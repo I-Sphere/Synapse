@@ -21,7 +21,10 @@
 					},
 					"parameters": {
 						"file_to_process": {
-							"value": "@pipeline().parameters.SourceFile ",
+							"value": {
+								"value": "@pipeline().parameters.SourceFile",
+								"type": "Expression"
+							},
 							"type": "string"
 						}
 					},
