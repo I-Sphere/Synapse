@@ -65,7 +65,7 @@
 					"tags": []
 				},
 				"source": [
-					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\""
+					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json\""
 				],
 				"execution_count": 6
 			},
