@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "Scala_GeneralJournalAccountEntry_Copy1",
+						"referenceName": "Scala_GeneralJournalAccountEntry_Test",
 						"type": "NotebookReference"
 					},
 					"snapshot": true

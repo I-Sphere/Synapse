@@ -1,5 +1,5 @@
 {
-	"name": "Scala_GeneralJournalAccountEntry_Copy1",
+	"name": "Scala_GeneralJournalAccountEntry_Test",
 	"properties": {
 		"folder": {
 			"name": "Example/D365"
@@ -62,9 +62,7 @@
 						}
 					},
 					"collapsed": true,
-					"tags": [
-						"parameters"
-					]
+					"tags": []
 				},
 				"source": [
 					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\""
