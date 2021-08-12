@@ -970,8 +970,10 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
-					}
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -992,14 +994,15 @@
 						"source": [
 							"//val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json\"\n",
 							"\n",
-							"val PathFile = \"abfss://synapse@isphere.dfs.core.windows.net/\"\n",
-							"val SourceFile = \"D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json\""
+							"val PathFile = \"\"\n",
+							"val SourceFile = \"\""
 						],
 						"outputs": [],
 						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"val file_to_process = PathFile.concat(SourceFile)\n",
 							"val dfSource = spark.read.json(file_to_process)\n",
