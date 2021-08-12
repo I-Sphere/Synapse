@@ -25,7 +25,8 @@
 		],
 		"parameters": {
 			"file_to_process": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "TEST"
 			}
 		},
 		"annotations": []
