@@ -23,11 +23,19 @@
 			"type": "string",
 			"defaultValue": "https://isphere.dfs.core.windows.net"
 		},
-		"On New GeneralJournalAccountEntry File_properties_Pipeline Test_parameters_SourceFile": {
+		"On New GeneralJournalAccountEntry File_properties_TEST_parameters_SourceFile": {
 			"type": "string",
 			"defaultValue": "@triggerBody().fileName"
 		},
 		"On New GeneralJournalAccountEntry File_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
+		},
+		"Trigger Test_properties_TEST_parameters_SourceFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"Trigger Test_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
 		}
@@ -131,13 +139,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Pipeline Test')]",
+			"name": "[concat(parameters('workspaceName'), '/TEST')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"activities": [
 					{
-						"name": "Scala_GeneralJournalAccountEntry_Test",
+						"name": "GeneralJournalAccountEntry",
 						"type": "SynapseNotebook",
 						"dependsOn": [],
 						"policy": {
@@ -303,6 +311,39 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/On New GeneralJournalAccountEntry File')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "TEST",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SourceFile": "[parameters('On New GeneralJournalAccountEntry File_properties_TEST_parameters_SourceFile')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_",
+					"blobPathEndsWith": ".json",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('On New GeneralJournalAccountEntry File_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/TEST')]"
 			]
 		},
 		{
@@ -1379,7 +1420,7 @@
 			"location": "westeurope"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/On New GeneralJournalAccountEntry File')]",
+			"name": "[concat(parameters('workspaceName'), '/Trigger Test')]",
 			"type": "Microsoft.Synapse/workspaces/triggers",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1388,11 +1429,11 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Pipeline Test",
+							"referenceName": "TEST",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SourceFile": "[parameters('On New GeneralJournalAccountEntry File_properties_Pipeline Test_parameters_SourceFile')]"
+							"SourceFile": "[parameters('Trigger Test_properties_TEST_parameters_SourceFile')]"
 						}
 					}
 				],
@@ -1401,14 +1442,14 @@
 					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_",
 					"blobPathEndsWith": ".json",
 					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('On New GeneralJournalAccountEntry File_properties_typeProperties_scope')]",
+					"scope": "[parameters('Trigger Test_properties_typeProperties_scope')]",
 					"events": [
 						"Microsoft.Storage.BlobCreated"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/Pipeline Test')]"
+				"[concat(variables('workspaceId'), '/pipelines/TEST')]"
 			]
 		}
 	]
