@@ -67,7 +67,7 @@
 				"source": [
 					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\""
 				],
-				"execution_count": 1
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -76,7 +76,7 @@
 					"\n",
 					"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
-				"execution_count": 2
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -98,7 +98,7 @@
 					"    \"code_site\"\n",
 					")"
 				],
-				"execution_count": 3
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -128,7 +128,7 @@
 					"                (current_timestamp()).as(\"date_integration\")\n",
 					"        )"
 				],
-				"execution_count": 4
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -149,7 +149,7 @@
 					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
 					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
-				"execution_count": 5
+				"execution_count": 10
 			}
 		]
 	}
