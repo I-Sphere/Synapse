@@ -133,7 +133,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Scala_GeneralJournalAccountEntry_Copy1",
+						"name": "Scala_GeneralJournalAccountEntry_Test",
 						"type": "SynapseNotebook",
 						"dependsOn": [],
 						"policy": {
@@ -146,8 +146,14 @@
 						"userProperties": [],
 						"typeProperties": {
 							"notebook": {
-								"referenceName": "Scala_GeneralJournalAccountEntry_Copy1",
+								"referenceName": "Scala_GeneralJournalAccountEntry_Test",
 								"type": "NotebookReference"
+							},
+							"parameters": {
+								"file_to_process": {
+									"value": "@pipeline().parameters.SourceFile",
+									"type": "string"
+								}
 							},
 							"snapshot": true
 						}
@@ -161,7 +167,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/Scala_GeneralJournalAccountEntry_Copy1')]"
+				"[concat(variables('workspaceId'), '/notebooks/Scala_GeneralJournalAccountEntry_Test')]"
 			]
 		},
 		{
@@ -860,7 +866,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Scala_GeneralJournalAccountEntry_Copy1')]",
+			"name": "[concat(parameters('workspaceName'), '/Scala_GeneralJournalAccountEntry_Test')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -906,8 +912,10 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
-					}
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -923,9 +931,7 @@
 								}
 							},
 							"collapsed": true,
-							"tags": [
-								"parameters"
-							]
+							"tags": []
 						},
 						"source": [
 							"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\""
@@ -935,6 +941,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"val dfSource = spark.read.json(file_to_process)\n",
 							"\n",
