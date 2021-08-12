@@ -8,6 +8,9 @@
 				"pipelineReference": {
 					"referenceName": "Pipeline Test",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SourceFile": "@triggerBody().fileName"
 				}
 			}
 		],
