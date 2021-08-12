@@ -20,14 +20,14 @@
 						"type": "NotebookReference"
 					},
 					"parameters": {
-						"FileName": {
+						"SourceFile": {
 							"value": {
 								"value": "@pipeline().parameters.SourceFile",
 								"type": "Expression"
 							},
 							"type": "string"
 						},
-						"FilePath": {
+						"PathFile": {
 							"value": "abfss://synapse@isphere.dfs.core.windows.net/",
 							"type": "string"
 						}
