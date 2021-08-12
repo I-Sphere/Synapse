@@ -41,7 +41,8 @@
 				"type": "string"
 			},
 			"PathFile": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "abfss://synapse@isphere.dfs.core.windows.net/"
 			}
 		},
 		"annotations": []
