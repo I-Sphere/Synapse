@@ -16,6 +16,9 @@
 		},
 		"ispheresynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://isphere.dfs.core.windows.net"
+		},
+		"On New GeneralJournalAccountEntry File_properties_typeProperties_scope": {
+			"value": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
 		}
 	}
 }
