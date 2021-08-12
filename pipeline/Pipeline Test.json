@@ -23,12 +23,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"file_to_process": {
-				"type": "string",
-				"defaultValue": "TEST"
-			}
-		},
 		"annotations": []
 	}
 }
