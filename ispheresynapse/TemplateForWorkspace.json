@@ -296,13 +296,6 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "D365_GeneralJournalAccountEntry",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
 							"referenceName": "Pipeline Test",
 							"type": "PipelineReference"
 						},
@@ -320,7 +313,6 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/D365_GeneralJournalAccountEntry')]",
 				"[concat(variables('workspaceId'), '/pipelines/Pipeline Test')]"
 			]
 		},
