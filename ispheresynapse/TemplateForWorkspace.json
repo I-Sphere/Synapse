@@ -162,14 +162,14 @@
 								"type": "NotebookReference"
 							},
 							"parameters": {
-								"FileName": {
+								"SourceFile": {
 									"value": {
 										"value": "@pipeline().parameters.SourceFile",
 										"type": "Expression"
 									},
 									"type": "string"
 								},
-								"FilePath": {
+								"PathFile": {
 									"value": "abfss://synapse@isphere.dfs.core.windows.net/",
 									"type": "string"
 								}
@@ -970,10 +970,8 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
@@ -1002,7 +1000,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"val file_to_process = PathFile.concat(SourceFile)\n",
 							"val dfSource = spark.read.json(file_to_process)\n",
