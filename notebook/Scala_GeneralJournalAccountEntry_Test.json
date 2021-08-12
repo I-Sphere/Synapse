@@ -65,15 +65,18 @@
 					"tags": []
 				},
 				"source": [
-					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json\""
+					"//val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json\"\n",
+					"\n",
+					"val PathFile = \"abfss://synapse@isphere.dfs.core.windows.net/\"\n",
+					"val SourceFile = \"D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json\""
 				],
 				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
 				"source": [
+					"val file_to_process = PathFile.concat(SourceFile)\n",
 					"val dfSource = spark.read.json(file_to_process)\n",
-					"\n",
 					"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
 				"execution_count": 7

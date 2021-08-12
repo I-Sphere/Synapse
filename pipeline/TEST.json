@@ -20,11 +20,15 @@
 						"type": "NotebookReference"
 					},
 					"parameters": {
-						"file_to_process": {
+						"FileName": {
 							"value": {
 								"value": "@pipeline().parameters.SourceFile",
 								"type": "Expression"
 							},
+							"type": "string"
+						},
+						"FilePath": {
+							"value": "abfss://synapse@isphere.dfs.core.windows.net/",
 							"type": "string"
 						}
 					},
@@ -34,6 +38,9 @@
 		],
 		"parameters": {
 			"SourceFile": {
+				"type": "string"
+			},
+			"PathFile": {
 				"type": "string"
 			}
 		},
