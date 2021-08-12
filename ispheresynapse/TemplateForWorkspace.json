@@ -146,12 +146,6 @@
 						}
 					}
 				],
-				"parameters": {
-					"file_to_process": {
-						"type": "string",
-						"defaultValue": "TEST"
-					}
-				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -284,36 +278,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/On New GeneralJournalAccountEntry File')]",
-			"type": "Microsoft.Synapse/workspaces/triggers",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Pipeline Test",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('On New GeneralJournalAccountEntry File_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/Pipeline Test')]"
 			]
 		},
 		{
@@ -1390,6 +1354,37 @@
 			},
 			"dependsOn": [],
 			"location": "westeurope"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/On New GeneralJournalAccountEntry File')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Pipeline Test",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging",
+					"blobPathEndsWith": ".json",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('On New GeneralJournalAccountEntry File_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/Pipeline Test')]"
+			]
 		}
 	]
 }
