@@ -54,7 +54,7 @@
 				"metadata": {
 					"jupyter": {
 						"source_hidden": false,
-						"outputs_hidden": false
+						"outputs_hidden": true
 					},
 					"nteract": {
 						"transient": {
@@ -62,11 +62,12 @@
 						}
 					},
 					"collapsed": true,
-					"tags": []
+					"tags": [
+						"parameters"
+					]
 				},
 				"source": [
 					"//val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json\"\n",
-					"\n",
 					"val PathFile = \"\"\n",
 					"val SourceFile = \"\""
 				],
