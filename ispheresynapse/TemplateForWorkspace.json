@@ -938,7 +938,7 @@
 							"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_*.json\""
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -948,7 +948,7 @@
 							"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -971,7 +971,7 @@
 							")"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -1002,7 +1002,7 @@
 							"        )"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 9
 					},
 					{
 						"cell_type": "code",
@@ -1024,7 +1024,7 @@
 							"df.write.mode(\"overwrite\").parquet(file_path)"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 10
 					}
 				]
 			},
