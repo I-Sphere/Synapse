@@ -2,7 +2,7 @@
 	"name": "On New GeneralJournalAccountEntry File",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
