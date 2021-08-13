@@ -482,30 +482,7 @@
 					"name": "Exemple/External Table"
 				},
 				"content": {
-					"query": "DROP EXTERNAL TABLE dbo.GeneralJournalAccountEntry\nGO\n\nCREATE EXTERNAL TABLE dbo.GeneralJournalAccountEntry\n(\n\tACCOUNTDISPLAYVALUE                     nvarchar(250),\n\tACCOUNTINGCURRENCYAMOUNT                float,\n\tACCOUNTINGDATE                     \t\tbigint,\n\tDESCRIPTION                     \t\tnvarchar(250),\n\tDOCUMENTDATE                     \t\tbigint,\n\tPOSTINGTYPE                     \t\tbigint,\n\tTRANSACTIONCURRENCYCREDITAMOUNT        \tfloat,\n\tTRANSACTIONCURRENCYDEBITAMOUNT         \tfloat,\n\tSITE                     \t\t\t\tint,\n\tdate_integration\t\t\t\t\t\tDATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/GeneralJournalAccountEntry'  \n)\nGO\n\nSELECT * FROM dbo.GeneralJournalAccountEntry\nGO",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"poolName": "SQLPerfPool",
-						"databaseName": "SQLPerfPool"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/dbo_GeneralJournalAccountEntry_Copy1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Exemple/External Table"
-				},
-				"content": {
-					"query": "DROP EXTERNAL TABLE dbo.GeneralJournalAccountEntry_test\nGO\n\nCREATE EXTERNAL TABLE dbo.GeneralJournalAccountEntry_test\n(\n\tACCOUNTDISPLAYVALUE                     nvarchar(250),\n\tACCOUNTINGCURRENCYAMOUNT                float,\n\tACCOUNTINGDATE                     \t\tDATETIME2,\n\tDESCRIPTION                     \t\tnvarchar(250),\n\tDOCUMENTDATE                     \t\tDATETIME2,\n\tPOSTINGTYPE                     \t\tbigint,\n\tTRANSACTIONCURRENCYCREDITAMOUNT        \tfloat,\n\tTRANSACTIONCURRENCYDEBITAMOUNT         \tfloat,\n\tSITE                     \t\t\t\tint,\n\tdate_integration\t\t\t\t\t\tDATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/GeneralJournalAccountEntry'  \n)\nGO\n\nSELECT * FROM dbo.GeneralJournalAccountEntry_test\nGO",
+					"query": "DROP EXTERNAL TABLE dbo.GeneralJournalAccountEntry\nGO\n\nCREATE EXTERNAL TABLE dbo.GeneralJournalAccountEntry\n(\n\tACCOUNTDISPLAYVALUE                     nvarchar(250),\n\tACCOUNTINGCURRENCYAMOUNT                float,\n\tACCOUNTINGDATE                     \t\tDATETIME2,\n\tDESCRIPTION                     \t\tnvarchar(250),\n\tDOCUMENTDATE                     \t\tDATETIME2,\n\tPOSTINGTYPE                     \t\tbigint,\n\tTRANSACTIONCURRENCYCREDITAMOUNT        \tfloat,\n\tTRANSACTIONCURRENCYDEBITAMOUNT         \tfloat,\n\tSITE                     \t\t\t\tint,\n\tdate_integration\t\t\t\t\t\tDATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/GeneralJournalAccountEntry'  \n)\nGO\n\nSELECT * FROM dbo.GeneralJournalAccountEntry\nGO",
 					"metadata": {
 						"language": "sql"
 					},
@@ -811,10 +788,8 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
