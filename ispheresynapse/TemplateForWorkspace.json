@@ -35,6 +35,10 @@
 			"type": "string",
 			"defaultValue": "@triggerBody().fileName"
 		},
+		"Trigger Test_properties_TEST_parameters_PathFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
 		"Trigger Test_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
@@ -327,7 +331,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -360,7 +364,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "DW_RefData",
@@ -399,14 +403,14 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"SourceFile": "[parameters('Trigger Test_properties_TEST_parameters_SourceFile')]"
+							"SourceFile": "[parameters('Trigger Test_properties_TEST_parameters_SourceFile')]",
+							"PathFile": "[parameters('Trigger Test_properties_TEST_parameters_PathFile')]"
 						}
 					}
 				],
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
-					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_",
-					"blobPathEndsWith": ".json",
+					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/",
 					"ignoreEmptyBlobs": true,
 					"scope": "[parameters('Trigger Test_properties_typeProperties_scope')]",
 					"events": [
