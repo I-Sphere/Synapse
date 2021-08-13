@@ -497,6 +497,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/dbo_GeneralJournalAccountEntry_Copy1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Exemple/External Table"
+				},
+				"content": {
+					"query": "DROP EXTERNAL TABLE dbo.GeneralJournalAccountEntry_test\nGO\n\nCREATE EXTERNAL TABLE dbo.GeneralJournalAccountEntry_test\n(\n\tACCOUNTDISPLAYVALUE                     nvarchar(250),\n\tACCOUNTINGCURRENCYAMOUNT                float,\n\tACCOUNTINGDATE                     \t\tDATETIME2,\n\tDESCRIPTION                     \t\tnvarchar(250),\n\tDOCUMENTDATE                     \t\tDATETIME2,\n\tPOSTINGTYPE                     \t\tbigint,\n\tTRANSACTIONCURRENCYCREDITAMOUNT        \tfloat,\n\tTRANSACTIONCURRENCYDEBITAMOUNT         \tfloat,\n\tSITE                     \t\t\t\tint,\n\tdate_integration\t\t\t\t\t\tDATETIME2\n)\nWITH\n(\n    DATA_SOURCE = ISphereDataLake\n  , FILE_FORMAT = ParquetFileFormat  \n  , LOCATION='DWH/GeneralJournalAccountEntry'  \n)\nGO\n\nSELECT * FROM dbo.GeneralJournalAccountEntry_test\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "ExemplePool",
+						"databaseName": "ExemplePool"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/dbo_Site')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -788,8 +811,10 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
-					}
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -835,13 +860,12 @@
 							"\n",
 							"val dfSource = spark.read.json(file_to_process)\n",
 							"\n",
-							"//from_unixtime(dfSource(\"ACCOUNTINGDATE\")/1000).as(\"yyyy-MM-dd\")\n",
 							"val dfJournal = dfSource.select(\n",
 							"\tdfSource(\"TRANSACTIONCURRENCYCREDITAMOUNT\"),\n",
 							"\tdfSource(\"TRANSACTIONCURRENCYDEBITAMOUNT\"),\n",
 							"\tdfSource(\"ACCOUNTDISPLAYVALUE\"),\n",
 							"\tdfSource(\"JOURNALNUMBER\"),\n",
-							"\tfrom_unixtime(dfSource(\"ACCOUNTINGDATE\")/1000).as(\"ACCOUNTINGDATE\"),\n",
+							"\tto_timestamp(from_unixtime(dfSource(\"ACCOUNTINGDATE\")/1000)).as(\"ACCOUNTINGDATE\"),\n",
 							"\tdfSource(\"LEDGERACCOUNT\"),\n",
 							"\tdfSource(\"TRANSACTIONCURRENCYCODE\"),\n",
 							"\tdfSource(\"TRANSACTIONCURRENCYAMOUNT\"),\n",
@@ -850,8 +874,8 @@
 							"\tdfSource(\"DESCRIPTION\"),\n",
 							"\tdfSource(\"QUANTITY\"),\n",
 							"\tdfSource(\"POSTINGTYPE\"),\n",
-							"\tfrom_unixtime(dfSource(\"ACKNOWLEDGEMENTDATE\")/1000).as(\"ACKNOWLEDGEMENTDATE\"),\n",
-							"\tfrom_unixtime(dfSource(\"DOCUMENTDATE\")/1000).as(\"DOCUMENTDATE\"),\n",
+							"\tto_timestamp(from_unixtime(dfSource(\"ACKNOWLEDGEMENTDATE\")/1000)).as(\"ACKNOWLEDGEMENTDATE\"),\n",
+							"\tto_timestamp(from_unixtime(dfSource(\"DOCUMENTDATE\")/1000)).as(\"DOCUMENTDATE\"),\n",
 							"\tdfSource(\"DOCUMENTNUMBER\"),\n",
 							"\tdfSource(\"LEDGERNAME\"),\n",
 							"\tdfSource(\"GENERALJOURNALACCOUNTENTRYRECID\"),\n",
