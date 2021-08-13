@@ -23,10 +23,6 @@
 			"type": "string",
 			"defaultValue": "https://isphere.dfs.core.windows.net"
 		},
-		"On New GeneralJournalAccountEntry File_properties_TEST_parameters_SourceFile": {
-			"type": "string",
-			"defaultValue": "@triggerBody().fileName"
-		},
 		"On New GeneralJournalAccountEntry File_properties_D365_GeneralJournalAccountEntry_parameters_SourceFile": {
 			"type": "string",
 			"defaultValue": "@triggerBody().fileName"
@@ -38,14 +34,6 @@
 		"On New GeneralJournalAccountEntry File_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
-		},
-		"Trigger Test_properties_TEST_parameters_SourceFile": {
-			"type": "string",
-			"defaultValue": "@triggerBody().fileName"
-		},
-		"Trigger Test_properties_TEST_parameters_PathFile": {
-			"type": "string",
-			"defaultValue": "@triggerBody().folderPath"
 		},
 		"Trigger Test_properties_typeProperties_scope": {
 			"type": "string",
@@ -174,65 +162,6 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/notebooks/Site')]",
 				"[concat(variables('workspaceId'), '/notebooks/Compte')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/TEST')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "GeneralJournalAccountEntry",
-						"type": "SynapseNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebook": {
-								"referenceName": "Scala_GeneralJournalAccountEntry_Test",
-								"type": "NotebookReference"
-							},
-							"parameters": {
-								"SourceFile": {
-									"value": {
-										"value": "@pipeline().parameters.SourceFile",
-										"type": "Expression"
-									},
-									"type": "string"
-								},
-								"PathFile": {
-									"value": {
-										"value": "@pipeline().parameters.PathFile",
-										"type": "Expression"
-									},
-									"type": "string"
-								}
-							},
-							"snapshot": true
-						}
-					}
-				],
-				"parameters": {
-					"SourceFile": {
-						"type": "string",
-						"defaultValue": "@pipeline().parameters.SourceFile"
-					},
-					"PathFile": {
-						"type": "string",
-						"defaultValue": "@pipeline().parameters.PathFile"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/Scala_GeneralJournalAccountEntry_Test')]"
 			]
 		},
 		{
@@ -369,17 +298,8 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "TEST",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SourceFile": "[parameters('On New GeneralJournalAccountEntry File_properties_TEST_parameters_SourceFile')]"
-						}
-					},
 					{
 						"pipelineReference": {
 							"referenceName": "D365_GeneralJournalAccountEntry",
@@ -403,7 +323,6 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/TEST')]",
 				"[concat(variables('workspaceId'), '/pipelines/D365_GeneralJournalAccountEntry')]"
 			]
 		},
@@ -444,19 +363,8 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "TEST",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SourceFile": "[parameters('Trigger Test_properties_TEST_parameters_SourceFile')]",
-							"PathFile": "[parameters('Trigger Test_properties_TEST_parameters_PathFile')]"
-						}
-					}
-				],
+				"runtimeState": "Stopped",
+				"pipelines": [],
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
 					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/",
@@ -468,9 +376,7 @@
 					]
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/TEST')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
