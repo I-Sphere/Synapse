@@ -6,15 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "TEST",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"SourceFile": "@triggerBody().fileName"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "D365_GeneralJournalAccountEntry",
 					"type": "PipelineReference"
 				},

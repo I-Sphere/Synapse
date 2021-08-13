@@ -3,18 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "TEST",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"SourceFile": "@triggerBody().fileName",
-					"PathFile": "@triggerBody().folderPath"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "BlobEventsTrigger",
 		"typeProperties": {
 			"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/",
