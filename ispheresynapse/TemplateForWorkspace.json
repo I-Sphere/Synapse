@@ -978,8 +978,10 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
-					}
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -1009,8 +1011,9 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
-							"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/\" + PathFile + \"/\" + SourceFile\n",
+							"val file_to_process = \"https://isphere.dfs.core.windows.net\" + PathFile + \"/\" + SourceFile\n",
 							"val dfSource = spark.read.json(file_to_process)\n",
 							"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 						],
