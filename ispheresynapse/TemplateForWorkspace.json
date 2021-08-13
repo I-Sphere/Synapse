@@ -188,11 +188,11 @@
 				"parameters": {
 					"SourceFile": {
 						"type": "string",
-						"defaultValue": "D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json"
+						"defaultValue": "@pipeline().parameters.SourceFile"
 					},
 					"PathFile": {
 						"type": "string",
-						"defaultValue": "abfss://synapse@isphere.dfs.core.windows.net/"
+						"defaultValue": "@pipeline().parameters.PathFile"
 					}
 				},
 				"annotations": []
