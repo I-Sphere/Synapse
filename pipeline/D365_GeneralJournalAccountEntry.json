@@ -23,6 +23,16 @@
 				}
 			}
 		],
+		"parameters": {
+			"SourceFile": {
+				"type": "string",
+				"defaultValue": "@pipeline().parameters.SourceFile"
+			},
+			"PathFile": {
+				"type": "string",
+				"defaultValue": "@pipeline().parameters.PathFile"
+			}
+		},
 		"annotations": []
 	}
 }
