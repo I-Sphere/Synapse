@@ -12,6 +12,16 @@
 				"parameters": {
 					"SourceFile": "@triggerBody().fileName"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "D365_GeneralJournalAccountEntry",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SourceFile": "@triggerBody().fileName",
+					"PathFile": "@triggerBody().folderPath"
+				}
 			}
 		],
 		"type": "BlobEventsTrigger",
