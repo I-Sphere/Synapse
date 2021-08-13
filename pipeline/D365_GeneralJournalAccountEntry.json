@@ -19,6 +19,16 @@
 						"referenceName": "Scala_GeneralJournalAccountEntry",
 						"type": "NotebookReference"
 					},
+					"parameters": {
+						"SourceFile": {
+							"value": "@pipeline().parameters.SourceFile",
+							"type": "string"
+						},
+						"PathFile": {
+							"value": "@pipeline().parameters.PathFile",
+							"type": "string"
+						}
+					},
 					"snapshot": true
 				}
 			}
