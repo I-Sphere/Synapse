@@ -75,6 +75,16 @@
 						}
 					}
 				],
+				"parameters": {
+					"SourceFile": {
+						"type": "string",
+						"defaultValue": "@pipeline().parameters.SourceFile"
+					},
+					"PathFile": {
+						"type": "string",
+						"defaultValue": "@pipeline().parameters.PathFile"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -837,10 +847,8 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
