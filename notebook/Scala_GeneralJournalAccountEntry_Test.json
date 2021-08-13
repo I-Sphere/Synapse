@@ -76,7 +76,7 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/\" + PathFile + \"/\" + SourceFile\n",
+					"val file_to_process = \"https://isphere.dfs.core.windows.net\" + PathFile + \"/\" + SourceFile\n",
 					"val dfSource = spark.read.json(file_to_process)\n",
 					"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
