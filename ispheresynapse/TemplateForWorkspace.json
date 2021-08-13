@@ -373,7 +373,6 @@
 					"frequency": "Hour",
 					"interval": 24,
 					"startTime": "2021-08-10T06:00:00Z",
-					"endTime": "2021-08-12T19:05:00Z",
 					"delay": "00:00:00",
 					"maxConcurrency": 50,
 					"retryPolicy": {
@@ -411,7 +410,8 @@
 					"ignoreEmptyBlobs": true,
 					"scope": "[parameters('Trigger Test_properties_typeProperties_scope')]",
 					"events": [
-						"Microsoft.Storage.BlobCreated"
+						"Microsoft.Storage.BlobCreated",
+						"Microsoft.Storage.BlobDeleted"
 					]
 				}
 			},
@@ -970,10 +970,8 @@
 						"sparkVersion": "3.0",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
+						"memory": 28
+					}
 				},
 				"cells": [
 					{
@@ -1003,7 +1001,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"val file_to_process = PathFile.concat(SourceFile)\n",
 							"val dfSource = spark.read.json(file_to_process)\n",
