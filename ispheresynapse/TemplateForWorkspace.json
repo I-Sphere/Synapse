@@ -184,7 +184,8 @@
 				],
 				"parameters": {
 					"SourceFile": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_2021-08-12-17-54-51.json"
 					},
 					"PathFile": {
 						"type": "string",
