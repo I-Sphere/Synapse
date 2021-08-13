@@ -68,9 +68,9 @@
 				},
 				"source": [
 					"val PathFile = \"\"\n",
-					"val SourceFile = \"\""
+					"val SourceFile = \"ADAXGeneralJournalAccountEntryStaging_2021-08-13-16-06-34.json\""
 				],
-				"execution_count": null
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -87,18 +87,33 @@
 					"collapsed": true
 				},
 				"source": [
-					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/\" + SourceFile"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"source": [
+					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/\" + SourceFile\n",
+					"\n",
 					"val dfSource = spark.read.json(file_to_process)\n",
 					"\n",
-					"val dfJournal = dfSource.withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
+					"//from_unixtime(dfSource(\"ACCOUNTINGDATE\")/1000).as(\"yyyy-MM-dd\")\n",
+					"val dfJournal = dfSource.select(\n",
+					"\tdfSource(\"TRANSACTIONCURRENCYCREDITAMOUNT\"),\n",
+					"\tdfSource(\"TRANSACTIONCURRENCYDEBITAMOUNT\"),\n",
+					"\tdfSource(\"ACCOUNTDISPLAYVALUE\"),\n",
+					"\tdfSource(\"JOURNALNUMBER\"),\n",
+					"\tfrom_unixtime(dfSource(\"ACCOUNTINGDATE\")/1000).as(\"ACCOUNTINGDATE\"),\n",
+					"\tdfSource(\"LEDGERACCOUNT\"),\n",
+					"\tdfSource(\"TRANSACTIONCURRENCYCODE\"),\n",
+					"\tdfSource(\"TRANSACTIONCURRENCYAMOUNT\"),\n",
+					"\tdfSource(\"ACCOUNTINGCURRENCYAMOUNT\"),\n",
+					"\tdfSource(\"REPORTINGCURRENCYAMOUNT\"),\n",
+					"\tdfSource(\"DESCRIPTION\"),\n",
+					"\tdfSource(\"QUANTITY\"),\n",
+					"\tdfSource(\"POSTINGTYPE\"),\n",
+					"\tfrom_unixtime(dfSource(\"ACKNOWLEDGEMENTDATE\")/1000).as(\"ACKNOWLEDGEMENTDATE\"),\n",
+					"\tfrom_unixtime(dfSource(\"DOCUMENTDATE\")/1000).as(\"DOCUMENTDATE\"),\n",
+					"\tdfSource(\"DOCUMENTNUMBER\"),\n",
+					"\tdfSource(\"LEDGERNAME\"),\n",
+					"\tdfSource(\"GENERALJOURNALACCOUNTENTRYRECID\"),\n",
+					"\tdfSource(\"JOURNALBATCHNUMBER\")).withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
-				"execution_count": 8
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +135,7 @@
 					"    \"code_site\"\n",
 					")"
 				],
-				"execution_count": 9
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -150,7 +165,7 @@
 					"                (current_timestamp()).as(\"date_integration\")\n",
 					"        )"
 				],
-				"execution_count": 10
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -171,7 +186,7 @@
 					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
 					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
-				"execution_count": 11
+				"execution_count": 34
 			}
 		]
 	}
