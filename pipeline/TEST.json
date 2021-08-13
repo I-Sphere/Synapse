@@ -28,7 +28,7 @@
 							"type": "string"
 						},
 						"PathFile": {
-							"value": "abfss://synapse@isphere.dfs.core.windows.net/",
+							"value": "@pipeline().parameters.PathFile",
 							"type": "string"
 						}
 					},
