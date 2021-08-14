@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"content": {
+			"query": "SELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://isphere.dfs.core.windows.net/synapse/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_20210814_190531.parquet/SITE=27/POSTINGTYPE=105/part-00000-6566e636-8f91-4d5e-922e-dad01e4730d0.c000.snappy.parquet',\n        FORMAT='PARQUET'\n    ) AS [result]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "master"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

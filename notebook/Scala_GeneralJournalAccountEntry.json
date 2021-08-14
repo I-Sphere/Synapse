@@ -183,7 +183,8 @@
 				"source": [
 					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
 					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
-					"df.write.partitionBy(\"SITE\", \"POSTINGTYPE\").mode(\"overwrite\").parquet(file_path)"
+					"df.write.mode(\"overwrite\").parquet(file_path)\n",
+					"//df.write.partitionBy(\"SITE\", \"POSTINGTYPE\").mode(\"overwrite\").parquet(file_path)"
 				],
 				"execution_count": 34
 			}
