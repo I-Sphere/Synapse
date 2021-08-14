@@ -68,9 +68,9 @@
 				},
 				"source": [
 					"val PathFile = \"\"\n",
-					"val SourceFile = \"ADAXGeneralJournalAccountEntryStaging_2021-08-13-16-06-34.json\""
+					"val SourceFile = \"ADAXGeneralJournalAccountEntryStaging_2021-08-13-23-02-27.json\""
 				],
-				"execution_count": 30
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"\tdfSource(\"GENERALJOURNALACCOUNTENTRYRECID\"),\n",
 					"\tdfSource(\"JOURNALBATCHNUMBER\")).withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
-				"execution_count": 31
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -134,7 +134,7 @@
 					"    \"code_site\"\n",
 					")"
 				],
-				"execution_count": 32
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -164,7 +164,7 @@
 					"                (current_timestamp()).as(\"date_integration\")\n",
 					"        )"
 				],
-				"execution_count": 33
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -183,10 +183,32 @@
 				"source": [
 					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
 					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
-					"df.write.mode(\"overwrite\").parquet(file_path)\n",
-					"//df.write.partitionBy(\"SITE\", \"POSTINGTYPE\").mode(\"overwrite\").parquet(file_path)"
+					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
-				"execution_count": 34
+				"execution_count": 40
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"val file_path_spark = \"abfss://synapse@isphere.dfs.core.windows.net/SparkTables/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
+					"\n",
+					"val dfSparkTable = df.withColumn(\"Year\", year(df(\"ACCOUNTINGDATE\"))).withColumn(\"Month\", month(df(\"ACCOUNTINGDATE\")))\n",
+					"\n",
+					"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)"
+				],
+				"execution_count": 41
 			}
 		]
 	}
