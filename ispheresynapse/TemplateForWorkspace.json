@@ -431,6 +431,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://isphere.dfs.core.windows.net/synapse/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_20210814_190531.parquet/SITE=27/POSTINGTYPE=105/part-00000-6566e636-8f91-4d5e-922e-dad01e4730d0.c000.snappy.parquet',\n        FORMAT='PARQUET'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"poolName": "Built-in",
+						"databaseName": "master"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/dbo_Compte')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -912,7 +932,8 @@
 						"source": [
 							"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
 							"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
-							"df.write.partitionBy(\"SITE\", \"POSTINGTYPE\").mode(\"overwrite\").parquet(file_path)"
+							"df.write.mode(\"overwrite\").parquet(file_path)\n",
+							"//df.write.partitionBy(\"SITE\", \"POSTINGTYPE\").mode(\"overwrite\").parquet(file_path)"
 						],
 						"outputs": [],
 						"execution_count": 34
