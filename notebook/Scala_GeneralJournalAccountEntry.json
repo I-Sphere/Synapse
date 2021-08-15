@@ -70,7 +70,7 @@
 					"val PathFile = \"\"\n",
 					"val SourceFile = \"ADAXGeneralJournalAccountEntryStaging_2021-08-13-23-02-27.json\""
 				],
-				"execution_count": 36
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"\tdfSource(\"GENERALJOURNALACCOUNTENTRYRECID\"),\n",
 					"\tdfSource(\"JOURNALBATCHNUMBER\")).withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
-				"execution_count": 37
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -134,7 +134,7 @@
 					"    \"code_site\"\n",
 					")"
 				],
-				"execution_count": 38
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -164,7 +164,7 @@
 					"                (current_timestamp()).as(\"date_integration\")\n",
 					"        )"
 				],
-				"execution_count": 39
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -185,7 +185,7 @@
 					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
 					"df.write.mode(\"overwrite\").parquet(file_path)"
 				],
-				"execution_count": 40
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -206,9 +206,10 @@
 					"\n",
 					"val dfSparkTable = df.withColumn(\"Year\", year(df(\"ACCOUNTINGDATE\"))).withColumn(\"Month\", month(df(\"ACCOUNTINGDATE\")))\n",
 					"\n",
-					"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)"
+					"//dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)\n",
+					"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").saveAsTable(\"example.GeneralJournalAccountEntry\")"
 				],
-				"execution_count": 41
+				"execution_count": 18
 			}
 		]
 	}

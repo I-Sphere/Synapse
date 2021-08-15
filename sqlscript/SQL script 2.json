@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 2",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [ACCOUNTDISPLAYVALUE]\n,[ACCOUNTINGCURRENCYAMOUNT]\n,[ACCOUNTINGDATE]\n,[DESCRIPTION]\n,[DOCUMENTDATE]\n,[POSTINGTYPE]\n,[TRANSACTIONCURRENCYCREDITAMOUNT]\n,[TRANSACTIONCURRENCYDEBITAMOUNT]\n,[SITE]\n,[date_integration]\n,[Year]\n,[Month]\n FROM [example].[dbo].[generaljournalaccountentry]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"poolName": "Built-in",
+				"databaseName": "example"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
