@@ -976,7 +976,7 @@
 							"\n",
 							"val dfSparkTable = df.withColumn(\"Year\", year(df(\"ACCOUNTINGDATE\"))).withColumn(\"Month\", month(df(\"ACCOUNTINGDATE\")))\n",
 							"\n",
-							"//dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)\n",
+							"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)\n",
 							"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").saveAsTable(\"example.GeneralJournalAccountEntry\")"
 						],
 						"outputs": [],
