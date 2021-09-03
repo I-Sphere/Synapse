@@ -2,7 +2,7 @@
 	"name": "On Refresh RefData",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipeline": {
 			"pipelineReference": {
 				"referenceName": "DW_RefData",
