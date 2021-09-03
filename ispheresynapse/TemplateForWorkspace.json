@@ -26,6 +26,18 @@
 		"Trigger Test_properties_typeProperties_scope": {
 			"type": "string",
 			"defaultValue": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
+		},
+		"On New GeneralJournalAccountEntry File_properties_D365_GeneralJournalAccountEntry_parameters_SourceFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"On New GeneralJournalAccountEntry File_properties_D365_GeneralJournalAccountEntry_parameters_PathFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"On New GeneralJournalAccountEntry File_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
 		}
 	},
 	"variables": {
@@ -1312,6 +1324,40 @@
 			},
 			"dependsOn": [],
 			"location": "westeurope"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/On New GeneralJournalAccountEntry File')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "D365_GeneralJournalAccountEntry",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"SourceFile": "[parameters('On New GeneralJournalAccountEntry File_properties_D365_GeneralJournalAccountEntry_parameters_SourceFile')]",
+							"PathFile": "[parameters('On New GeneralJournalAccountEntry File_properties_D365_GeneralJournalAccountEntry_parameters_PathFile')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/synapse/blobs/D365/ADAXGeneralJournalAccountEntryStaging/ADAXGeneralJournalAccountEntryStaging_",
+					"blobPathEndsWith": ".json",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('On New GeneralJournalAccountEntry File_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/D365_GeneralJournalAccountEntry')]"
+			]
 		}
 	]
 }

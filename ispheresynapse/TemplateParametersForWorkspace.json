@@ -19,6 +19,15 @@
 		},
 		"Trigger Test_properties_typeProperties_scope": {
 			"value": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
+		},
+		"On New GeneralJournalAccountEntry File_properties_D365_GeneralJournalAccountEntry_parameters_SourceFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"On New GeneralJournalAccountEntry File_properties_D365_GeneralJournalAccountEntry_parameters_PathFile": {
+			"value": "@triggerBody().folderPath"
+		},
+		"On New GeneralJournalAccountEntry File_properties_typeProperties_scope": {
+			"value": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Storage/storageAccounts/isphere"
 		}
 	}
 }
