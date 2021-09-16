@@ -1387,6 +1387,20 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/PowerBIEngie2')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "PowerBIWorkspace",
+				"typeProperties": {
+					"workspaceID": "2184b34b-62f9-42d8-b48e-ceb9ef938859",
+					"tenantID": "f4f5181d-7626-4668-b4f5-7659f53f62f6"
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
