@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b636979b-4f7c-47a5-8ea3-83e899bdd5b7"
+				"spark.autotune.trackingId": "5f3cc2e8-69d4-438f-bd05-5297dc12f329"
 			}
 		},
 		"metadata": {
@@ -72,7 +72,7 @@
 					"val PathFile = \"https://candrisynapseadls2.blob.core.windows.net/candrisynapsefs/\"\n",
 					"val SourceFile = \"Bronze/D365/ADAXGeneralJournalAccountEntryStaging_2021-09-03-09-37-40.csv\""
 				],
-				"execution_count": 41
+				"execution_count": 65
 			},
 			{
 				"cell_type": "code",
@@ -114,7 +114,7 @@
 					"\tdfSource(\"GENERALJOURNALACCOUNTENTRYRECID\"),\n",
 					"\tdfSource(\"JOURNALBATCHNUMBER\")).withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
-				"execution_count": 42
+				"execution_count": 66
 			},
 			{
 				"cell_type": "code",
@@ -138,7 +138,7 @@
 					")\n",
 					"*/"
 				],
-				"execution_count": 43
+				"execution_count": 67
 			},
 			{
 				"cell_type": "code",
@@ -170,7 +170,7 @@
 					"        )\n",
 					"*/"
 				],
-				"execution_count": 44
+				"execution_count": 68
 			},
 			{
 				"cell_type": "code",
@@ -192,7 +192,7 @@
 					"//df.write.mode(\"overwrite\").parquet(file_path)\n",
 					"dfJournal.write.mode(\"Append\").parquet(\"abfss://candrisynapsefs@candrisynapseadls2.dfs.core.windows.net/Silver/D365/ADAXGeneralJournalAccountEntryStaging.parquet\")"
 				],
-				"execution_count": 45
+				"execution_count": 69
 			},
 			{
 				"cell_type": "code",
@@ -209,15 +209,53 @@
 					"collapsed": true
 				},
 				"source": [
-					"\n",
 					"val file_path_spark = \"abfss://candrisynapsefs@candrisynapseadls2.dfs.core.windows.net/Silver/D365/ADAXGeneralJournalAccountEntryStaging_SparkTable.parquet\"\n",
 					"\n",
 					"val dfSparkTable = dfJournal.withColumn(\"Year\", year(dfJournal(\"ACCOUNTINGDATE\"))).withColumn(\"Month\", month(dfJournal(\"ACCOUNTINGDATE\")))\n",
 					"\n",
-					"//dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)\n",
-					"dfSparkTable.write.saveAsTable(\"example.GeneralJournalAccountEntry\")"
+					"//dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)"
 				],
-				"execution_count": 53
+				"execution_count": 70
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\n",
+					"spark.sql(\"CREATE DATABASE IF NOT EXISTS example\")"
+				],
+				"execution_count": 72
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"dfSparkTable.write.save(\"example.GeneralJournalAccountEntry\")"
+				],
+				"execution_count": 73
 			}
 		]
 	}
