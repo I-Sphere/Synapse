@@ -7,43 +7,45 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "sparkpooldev1",
+			"referenceName": "SparkPoolDev",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "28g",
-			"driverCores": 4,
-			"executorMemory": "28g",
-			"executorCores": 4,
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
 			"numExecutors": 2,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2"
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "e30b0ada-5943-4d97-bc9c-7b86a506e938"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
-				"name": "synapse_spark",
-				"display_name": "Synapse Spark"
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "scala"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/RG_DEV/providers/Microsoft.Synapse/workspaces/ispheresynapse/bigDataPools/sparkpooldev1",
-				"name": "sparkpooldev1",
+				"id": "/subscriptions/ff99046f-f0fa-420c-bbb5-ceea1002ae0f/resourceGroups/Candri/providers/Microsoft.Synapse/workspaces/candrisynapse/bigDataPools/SparkPoolDev",
+				"name": "SparkPoolDev",
 				"type": "Spark",
-				"endpoint": "https://ispheresynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpooldev1",
+				"endpoint": "https://candrisynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SparkPoolDev",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.0",
-				"nodeCount": 3,
-				"cores": 4,
-				"memory": 28,
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
@@ -67,10 +69,10 @@
 					]
 				},
 				"source": [
-					"val PathFile = \"\"\n",
-					"val SourceFile = \"ADAXGeneralJournalAccountEntryStaging_2021-08-13-23-02-27.json\""
+					"val PathFile = \"https://candrisynapseadls2.blob.core.windows.net/candrisynapsefs/\"\n",
+					"val SourceFile = \"Bronze/D365/ADAXGeneralJournalAccountEntryStaging_2021-09-03-09-37-40.csv\""
 				],
-				"execution_count": 13
+				"execution_count": 35
 			},
 			{
 				"cell_type": "code",
@@ -87,9 +89,9 @@
 					"collapsed": true
 				},
 				"source": [
-					"val file_to_process = \"abfss://synapse@isphere.dfs.core.windows.net/D365/ADAXGeneralJournalAccountEntryStaging/\" + SourceFile\n",
+					"val file_to_process = PathFile + SourceFile\n",
 					"\n",
-					"val dfSource = spark.read.json(file_to_process)\n",
+					"val dfSource = spark.read.option(\"header\",true).csv(\"abfss://candrisynapsefs@candrisynapseadls2.dfs.core.windows.net/Bronze/D365/ADAXGeneralJournalAccountEntryStaging_2021-09-03-09-37-40.csv\")\n",
 					"\n",
 					"val dfJournal = dfSource.select(\n",
 					"\tdfSource(\"TRANSACTIONCURRENCYCREDITAMOUNT\"),\n",
@@ -112,7 +114,7 @@
 					"\tdfSource(\"GENERALJOURNALACCOUNTENTRYRECID\"),\n",
 					"\tdfSource(\"JOURNALBATCHNUMBER\")).withColumn(\"SITE\", split(col(\"LEDGERACCOUNT\"), \"-\").getItem(1))"
 				],
-				"execution_count": 14
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -129,12 +131,14 @@
 					"collapsed": true
 				},
 				"source": [
+					"/*\n",
 					"val dfSite = spark.read.sqlanalytics(\"ExemplePool.dbo.Site\").select(\n",
-					"    \"id_site\",\n",
+					"   \"id_site\",\n",
 					"    \"code_site\"\n",
-					")"
+					")\n",
+					"*/"
 				],
-				"execution_count": 15
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -151,6 +155,7 @@
 					"collapsed": true
 				},
 				"source": [
+					"/*\n",
 					"val df = dfJournal.join(dfSite, dfJournal(\"SITE\") === dfSite(\"code_site\")).select(\n",
 					"                dfJournal(\"ACCOUNTDISPLAYVALUE\").alias(\"ACCOUNTDISPLAYVALUE\"),\n",
 					"                dfJournal(\"ACCOUNTINGCURRENCYAMOUNT\").alias(\"ACCOUNTINGCURRENCYAMOUNT\"),\n",
@@ -162,9 +167,10 @@
 					"                dfJournal(\"TRANSACTIONCURRENCYDEBITAMOUNT\").alias(\"TRANSACTIONCURRENCYDEBITAMOUNT\"),\n",
 					"                dfSite(\"id_site\").alias(\"SITE\"),\n",
 					"                (current_timestamp()).as(\"date_integration\")\n",
-					"        )"
+					"        )\n",
+					"*/"
 				],
-				"execution_count": 16
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -183,9 +189,10 @@
 				"source": [
 					"val currDateTime = new java.text.SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(System.currentTimeMillis())\n",
 					"val file_path = \"abfss://synapse@isphere.dfs.core.windows.net/DWH/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
-					"df.write.mode(\"overwrite\").parquet(file_path)"
+					"//df.write.mode(\"overwrite\").parquet(file_path)\n",
+					"dfJournal.write.mode(\"Append\").parquet(\"abfss://candrisynapsefs@candrisynapseadls2.dfs.core.windows.net/Silver/D365/ADAXGeneralJournalAccountEntryStaging.parquet\")"
 				],
-				"execution_count": 17
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -202,14 +209,16 @@
 					"collapsed": true
 				},
 				"source": [
+					"/*\n",
 					"val file_path_spark = \"abfss://synapse@isphere.dfs.core.windows.net/SparkTables/GeneralJournalAccountEntry/GeneralJournalAccountEntry_\" + currDateTime.toString() + \".parquet\"\n",
 					"\n",
 					"val dfSparkTable = df.withColumn(\"Year\", year(df(\"ACCOUNTINGDATE\"))).withColumn(\"Month\", month(df(\"ACCOUNTINGDATE\")))\n",
 					"\n",
 					"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").parquet(file_path_spark)\n",
-					"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").saveAsTable(\"example.GeneralJournalAccountEntry\")"
+					"dfSparkTable.write.partitionBy(\"Year\", \"Month\").mode(\"append\").saveAsTable(\"example.GeneralJournalAccountEntry\")\n",
+					"*/"
 				],
-				"execution_count": 18
+				"execution_count": 40
 			}
 		]
 	}
