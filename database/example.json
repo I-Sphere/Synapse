@@ -1,0 +1,22 @@
+{
+	"name": "example",
+	"properties": {
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true
+		},
+		"Name": "example",
+		"EntityType": "DATABASE",
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://candrisynapsefs@candrisynapseadls2.dfs.core.windows.net/example",
+			"Properties": {
+				"FormatType": "parquet",
+				"LinkedServiceName": "candrisynapse-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
